@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap');
+
+:root {
+  /*Main colors*/
+  --background-light: #333;
+  --background: #1E1E1E;
+  --background-dark: #111;
+
+  --accent1: #007ACC;
+  --accent1-dark: rgb(0, 100, 165);
+  --accent1-darker: rgb(0, 60, 100);
+
+  --accent2: #323131;
+  --accent2-transparent: rgba(50, 49, 49, 0.5);
+  --accent2-dark: #202020;
+  --accent2-dark-transparent: rgba(32, 32, 32, 0.5);
+  --accent2-darker: #0f0f0f;
+
+  --accent3: #68217a;
+
+  /*Nav*/
+  --main-active: var(--accent1-dark);
+  --accent-active: var(--accent1-dark);
+
+  /*Various Text*/
+  --text: white;
+  --note: gray;
+  --important: red;
+  --button-text: black;
+
+  /*CONST*/
+  --nav-size: 50px;
+  --footer-size: 230px;
+}
+
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--accent1);
+  transition: color 0.25s;
+}
+
+a:hover {
+  color: var(--accent1-dark);
+}
