@@ -27,7 +27,7 @@ const AllPlayers = (): JSX.Element => {
     }, []);
 
     const getTop3Stats = (): unknown[] => {
-        const headers = ['', ''];
+        const headers = ['Player', 'Count'];
         if (players) {
             return [headers, ...players.sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
         }
@@ -56,6 +56,7 @@ const AllPlayers = (): JSX.Element => {
                     loader={<div>Loading Chart</div>}
                     data={getTop3Stats()}
                     options={{
+                        isStacked: true,
                         chart: {
                             title: '3 plus gros joueurs',
                         },
@@ -67,7 +68,7 @@ const AllPlayers = (): JSX.Element => {
                     }}
                 />
             </Container>
-            <p>Chaque joueur joue {getAverage().toLocaleString(undefined, { maximumFractionDigits: 0 })} missions en moyenne</p>
+            <p>Chaque joueur a joué {getAverage().toLocaleString(undefined, { maximumFractionDigits: 0 })} missions en moyenne</p>
         </div>
     );
 }
