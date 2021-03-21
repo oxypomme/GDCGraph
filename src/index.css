@@ -2,28 +2,18 @@
 
 :root {
   /*Main colors*/
-  --background-light: #333;
-  --background: #1E1E1E;
-  --background-dark: #111;
+  --background-light: #eee;
+  --background: white;
+  --background-dark: #F8F8F8;
 
-  --accent1: #007ACC;
-  --accent1-dark: rgb(0, 100, 165);
-  --accent1-darker: rgb(0, 60, 100);
-
-  --accent2: #323131;
-  --accent2-transparent: rgba(50, 49, 49, 0.5);
-  --accent2-dark: #202020;
-  --accent2-dark-transparent: rgba(32, 32, 32, 0.5);
-  --accent2-darker: #0f0f0f;
-
-  --accent3: #68217a;
+  --accent1: #EEEEEE;
 
   /*Nav*/
   --main-active: var(--accent1-dark);
   --accent-active: var(--accent1-dark);
 
   /*Various Text*/
-  --text: white;
+  --text: #444444;
   --note: gray;
   --important: red;
   --button-text: black;
@@ -44,11 +34,19 @@ body {
 
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 500;
+  line-height: 1.1;
 }
 
 a {

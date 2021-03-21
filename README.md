@@ -1,1 +1,1 @@
-# GDC-API
+# GDC Graph

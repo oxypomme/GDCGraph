@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import Navbar from "./features/commons/Navbar";
 
 import Home from "./views/home";
+import Players from "./views/players";
 
 import NotFound from "./views/errors/NotFound";
 
@@ -21,7 +22,7 @@ const App = (): JSX.Element => {
       <AppContainer>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/players/:id" component={Home} />
+          <Route exact path={["/players", "/players/:id"]} component={Players} />
           <Route exact path="/missions/:id" component={Home} />
           <Route component={NotFound} />
         </Switch>

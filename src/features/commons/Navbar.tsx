@@ -3,8 +3,7 @@ import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartPie, faHome, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { faIdCard } from '@fortawesome/free-regular-svg-icons';
+import { faChartPie, faGlobeEurope, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const Nav = styled.nav`
     height: var(--nav-size);
@@ -54,8 +53,8 @@ const Navbar = (): JSX.Element => {
         <Nav id="navbar">
             <NavList>
                 <NavItem><NavLink exact to="/"><FontAwesomeIcon icon={faChartPie} />GDC Graph</NavLink></NavItem>
-                <NavItem><NavLink exact to="/players"><FontAwesomeIcon icon={faUsers} />Joueurs</NavLink></NavItem>
-                <NavItem><NavLink exact to="/missions">{/*<FontAwesomeIcon icon={faIdCard} />*/}Missions</NavLink></NavItem>
+                <NavItem><NavLink to="/players"><FontAwesomeIcon icon={faUsers} />Joueurs</NavLink></NavItem>
+                <NavItem><NavLink exact to="/missions"><FontAwesomeIcon icon={faGlobeEurope} />Missions</NavLink></NavItem>
             </NavList>
         </Nav>
     );
