@@ -8,7 +8,8 @@ import { url as urlAPI } from '../../config/gdcapi.json';
 import EMissionStatus from '../../models/EMissionStatus';
 import EPlayerStatus from '../../models/EPlayerStatus';
 import MissionType from '../../models/MissionType';
-import PlayerType from '../../models/PlayerType';
+import IPlayerType from '../../models/IPlayerType';
+import IStatType from '../../models/IStatType';
 
 const Container = styled.div`
     display: flex;
@@ -25,15 +26,14 @@ type PropsType = {
 }
 
 type PlayerDetailType = {
-    infos: PlayerType,
+    infos: IPlayerType,
     missions: Array<MissionType>
 }
 
-type AStatType = {
+interface IRadialStat extends IStatType {
     angle: number,
     label: string,
-    subLabel: string,
-    style: { fill: string, strokeWidth: number }
+    subLabel: string
 }
 
 const PlayerDetail = (props: PropsType): JSX.Element => {
@@ -46,32 +46,32 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         })();
     }, [id]);
 
-    const getTotalPlayerStatus = (status: EPlayerStatus): number => {
+    const getTotalPlayerStatus = (player: PlayerDetailType | undefined, status: EPlayerStatus): number => {
         if (player) {
             return player.missions.filter(m => m.player_status === status).length;
         }
         return 0;
     }
 
-    const getTotalMissionStatus = (status: EMissionStatus): number => {
+    const getTotalMissionStatus = (player: PlayerDetailType | undefined, status: EMissionStatus): number => {
         if (player) {
             return player.missions.filter(m => m.mission_status === status).length;
         }
         return 0;
     }
 
-    const getTotalPlayerStatusWithMission = (pStatus: EPlayerStatus, mStatus: EMissionStatus): number => {
+    const getTotalPlayerStatusWithMission = (player: PlayerDetailType | undefined, pStatus: EPlayerStatus, mStatus: EMissionStatus): number => {
         if (player) {
             return player.missions.filter(m => m.player_status === pStatus && m.mission_status === mStatus).length;
         }
         return 0;
     }
 
-    const getDeathStats = (): Array<AStatType> => {
+    const getDeathStats = (player: PlayerDetailType | undefined): IRadialStat[] => {
         const data = [];
         if (player) {
-            const alive = getTotalPlayerStatus(EPlayerStatus.ALIVE);
-            const death = getTotalPlayerStatus(EPlayerStatus.DEAD);
+            const alive = getTotalPlayerStatus(player, EPlayerStatus.ALIVE);
+            const death = getTotalPlayerStatus(player, EPlayerStatus.DEAD);
             if (alive) {
                 data.push({
                     angle: alive,
@@ -100,11 +100,11 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         return data;
     }
 
-    const getLooseStats = (): Array<AStatType> => {
+    const getLooseStats = (player: PlayerDetailType | undefined): IRadialStat[] => {
         const data = [];
         if (player) {
-            const win = getTotalMissionStatus(EMissionStatus.SUCCESS);
-            const loose = getTotalMissionStatus(EMissionStatus.FAILED);
+            const win = getTotalMissionStatus(player, EMissionStatus.SUCCESS);
+            const loose = getTotalMissionStatus(player, EMissionStatus.FAILED);
             if (win) {
                 data.push({
                     angle: win,
@@ -141,26 +141,26 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                 <div>
                     <h3>Mort ou vif ?</h3>
                     <RadialChart
-                        data={getDeathStats()}
+                        data={getDeathStats(player)}
                         showLabels={true}
                         animation={true}
                         width={300}
                         height={300} />
                     <p>
-                        Ratio : {(getTotalPlayerStatus(EPlayerStatus.ALIVE) / getTotalPlayerStatus(EPlayerStatus.DEAD))
+                        Ratio : {(getTotalPlayerStatus(player, EPlayerStatus.ALIVE) / getTotalPlayerStatus(player, EPlayerStatus.DEAD))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </div>
                 <div>
                     <h3>Victoire ?</h3>
                     <RadialChart
-                        data={getLooseStats()}
+                        data={getLooseStats(player)}
                         showLabels={true}
                         animation={true}
                         width={300}
                         height={300} />
                     <p>
-                        Ratio : {(getTotalMissionStatus(EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.FAILED))
+                        Ratio : {(getTotalMissionStatus(player, EMissionStatus.SUCCESS) / getTotalMissionStatus(player, EMissionStatus.FAILED))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </div>

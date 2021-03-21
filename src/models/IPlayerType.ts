@@ -1,4 +1,4 @@
-type PlayerType = {
+interface IPlayerType {
     id: number,
     name: string,
     creation_date: string,
@@ -6,4 +6,4 @@ type PlayerType = {
     count_missions: number
 }
 
-export default PlayerType;
+export default IPlayerType;
