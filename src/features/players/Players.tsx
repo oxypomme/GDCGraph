@@ -1,12 +1,11 @@
 import React from 'react';
-import { VerticalBarSeries, XAxis, XYPlot, YAxis } from 'react-vis';
 import styled from '@emotion/styled';
 
+import { Chart } from "react-google-charts";
 import urljoin from 'url-join';
 
 import { url as urlAPI } from '../../config/gdcapi.json';
 import IPlayerType from '../../models/IPlayerType';
-import IStatType from '../../models/IStatType';
 
 const Container = styled.div`
     display: flex;
@@ -18,11 +17,6 @@ interface IPlayersType extends IPlayerType {
     last_mission: string
 }
 
-interface IBarStat extends IStatType {
-    x: string,
-    y: number
-}
-
 const AllPlayers = (): JSX.Element => {
     const [players, setPlayers] = React.useState<IPlayersType[]>()
 
@@ -32,39 +26,48 @@ const AllPlayers = (): JSX.Element => {
         })();
     }, []);
 
-    const getTop3Stats = (players: IPlayersType[] | undefined): IBarStat[] => {
-        if (players)
-            return players.sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ({
-                x: p.name,
-                y: p.count_missions,
-                style: {
-                    fill: undefined,
-                    strokeWidth: undefined
-                }
-            }));
-        return [];
+    const getTop3Stats = (): unknown[] => {
+        const headers = ['', ''];
+        if (players) {
+            return [headers, ...players.sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
+        }
+        return [headers];
+    }
+
+    const getAverage = (): number => {
+        if (players) {
+            let sumMiss = 0;
+            for (const player of players) {
+                sumMiss += player.count_missions;
+            }
+            return sumMiss / players.length;
+        }
+        return 0;
     }
 
     return (
         <div>
-            <h2>{players?.length} joueurs ont déjà effectué une mission</h2>
+            <h2>{players?.length} joueurs ont étés trouvés</h2>
             <Container>
-                <XYPlot
-                    xType={'ordinal'}
-                    animation={true}
-                    width={300}
-                    height={300}>
-                    <VerticalBarSeries
-                        barWidth={0.5}
-                        animation={true}
-                        data={getTop3Stats(players)}
-                        onSeriesMouseOver={ev => {
-                            console.log(ev);
-                        }} />
-                    <XAxis />
-                    <YAxis title="Nombre de missions" />
-                </XYPlot>
+                <Chart
+                    width={'auto'}
+                    height={'auto'}
+                    chartType="ColumnChart"
+                    loader={<div>Loading Chart</div>}
+                    data={getTop3Stats()}
+                    options={{
+                        chart: {
+                            title: '3 plus gros joueurs',
+                        },
+                        legend: 'none',
+                        vAxis: {
+                            title: "Nombre de missions",
+                        },
+                        colors: ['#ADEBAD']
+                    }}
+                />
             </Container>
+            <p>Chaque joueur joue {getAverage().toLocaleString(undefined, { maximumFractionDigits: 0 })} missions en moyenne</p>
         </div>
     );
 }

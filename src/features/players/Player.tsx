@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import { RadialChart } from 'react-vis';
+import { Chart } from "react-google-charts";
 import urljoin from 'url-join';
 
 import { url as urlAPI } from '../../config/gdcapi.json';
@@ -9,31 +9,21 @@ import EMissionStatus from '../../models/EMissionStatus';
 import EPlayerStatus from '../../models/EPlayerStatus';
 import MissionType from '../../models/MissionType';
 import IPlayerType from '../../models/IPlayerType';
-import IStatType from '../../models/IStatType';
+import PieStyle from './PieStyle';
 
 const Container = styled.div`
     display: flex;
     align-content: center;
     justify-content: center;
-
-    & > * {
-        margin: 0 50px;
-    }
 `;
 
 type PropsType = {
-    id: number
+    id: string
 }
 
 type PlayerDetailType = {
     infos: IPlayerType,
     missions: Array<MissionType>
-}
-
-interface IRadialStat extends IStatType {
-    angle: number,
-    label: string,
-    subLabel: string
 }
 
 const PlayerDetail = (props: PropsType): JSX.Element => {
@@ -42,92 +32,66 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
 
     React.useEffect((): void => {
         (async () => {
-            setPlayer(await (await fetch(urljoin(urlAPI, `/players/${id}`))).json());
+            let pId = id;
+            if (!parseInt(id)) {
+                pId = (await (await fetch(urljoin(urlAPI, `/players/name/${id}`))).json()).id;
+            }
+            setPlayer(await (await fetch(urljoin(urlAPI, `/players/${pId}`))).json());
         })();
     }, [id]);
 
-    const getTotalPlayerStatus = (player: PlayerDetailType | undefined, status: EPlayerStatus): number => {
+    const getTotalPlayerStatus = (status: EPlayerStatus): number => {
         if (player) {
             return player.missions.filter(m => m.player_status === status).length;
         }
         return 0;
     }
 
-    const getTotalMissionStatus = (player: PlayerDetailType | undefined, status: EMissionStatus): number => {
+    const getTotalMissionStatus = (status: EMissionStatus): number => {
         if (player) {
             return player.missions.filter(m => m.mission_status === status).length;
         }
         return 0;
     }
 
-    const getTotalPlayerStatusWithMission = (player: PlayerDetailType | undefined, pStatus: EPlayerStatus, mStatus: EMissionStatus): number => {
+    const getTotalPlayerStatusWithMission = (pStatus: EPlayerStatus, mStatus: EMissionStatus): number => {
         if (player) {
             return player.missions.filter(m => m.player_status === pStatus && m.mission_status === mStatus).length;
         }
         return 0;
     }
 
-    const getDeathStats = (player: PlayerDetailType | undefined): IRadialStat[] => {
-        const data = [];
+    const getDeathStats = (): unknown[] => {
+        const data: unknown[] = [["Status fin", "Nombre"]];
         if (player) {
-            const alive = getTotalPlayerStatus(player, EPlayerStatus.ALIVE);
-            const death = getTotalPlayerStatus(player, EPlayerStatus.DEAD);
+            const alive = getTotalPlayerStatus(EPlayerStatus.ALIVE);
+            const death = getTotalPlayerStatus(EPlayerStatus.DEAD);
             if (alive) {
-                data.push({
-                    angle: alive,
-                    label: "En vie",
-                    subLabel: alive.toString(),
-                    style: { fill: '#D9EDF7', strokeWidth: 0 }
-                });
+                data.push(['Vivant', alive]);
             }
             if (death) {
-                data.push({
-                    angle: death,
-                    label: "Mort",
-                    subLabel: death.toString(),
-                    style: { fill: '#FCF8E3', strokeWidth: 0 }
-                });
+                data.push(['Mort', death]);
             }
             if (alive + death !== player.infos.count_missions) {
-                data.push({
-                    angle: player.infos.count_missions - (alive + death),
-                    label: "Inconnu",
-                    subLabel: (player.infos.count_missions - (alive + death)).toString(),
-                    style: { fill: '#CCC', strokeWidth: 0 }
-                });
+                data.push(['Inconnu', player.infos.count_missions - (alive + death)]);
             }
         }
         return data;
     }
 
-    const getLooseStats = (player: PlayerDetailType | undefined): IRadialStat[] => {
-        const data = [];
+    const getLooseStats = (): unknown[] => {
+        const data: unknown[] = [["Verdict", "Nombre"]];
         if (player) {
-            const win = getTotalMissionStatus(player, EMissionStatus.SUCCESS);
-            const loose = getTotalMissionStatus(player, EMissionStatus.FAILED);
+            const win = getTotalMissionStatus(EMissionStatus.SUCCESS);
+            const loose = getTotalMissionStatus(EMissionStatus.FAILED);
             if (win) {
-                data.push({
-                    angle: win,
-                    label: "Victoire",
-                    subLabel: win.toString(),
-                    style: { fill: '#DFF0D8', strokeWidth: 0 }
-                });
+                data.push(['Succe', win]);
             }
             if (loose) {
-                data.push({
-                    angle: loose,
-                    label: "Echec",
-                    subLabel: loose.toString(),
-                    style: { fill: '#F2DEDE', strokeWidth: 0 }
-                });
+                data.push(['Echec', loose]);
             }
             if (win + loose !== player.infos.count_missions) {
-                data.push({
-                    angle: player.infos.count_missions - (win + loose),
-                    label: "Inconnu",
-                    subLabel: (player.infos.count_missions - (win + loose)).toString(),
-                    style: { fill: '#FCF8E3', strokeWidth: 0 }
-                });
+                data.push(['Inconnu', player.infos.count_missions - (win + loose)]);
             }
         }
         return data;
@@ -140,29 +104,33 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             <Container>
                 <div>
                     <h3>Mort ou vif ?</h3>
-                    <RadialChart
-                        data={getDeathStats(player)}
-                        showLabels={true}
-                        animation={true}
-                        width={300}
-                        height={300} />
                     <p>
-                        Ratio : {(getTotalPlayerStatus(player, EPlayerStatus.ALIVE) / getTotalPlayerStatus(player, EPlayerStatus.DEAD))
+                        Ratio : {(getTotalPlayerStatus(EPlayerStatus.ALIVE) / getTotalPlayerStatus(EPlayerStatus.DEAD))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
+                    <Chart
+                        width={'300px'}
+                        height={'auto'}
+                        chartType="PieChart"
+                        loader={<div>Waiting Data</div>}
+                        data={getDeathStats()}
+                        options={{ ...PieStyle }}
+                    />
                 </div>
                 <div>
                     <h3>Victoire ?</h3>
-                    <RadialChart
-                        data={getLooseStats(player)}
-                        showLabels={true}
-                        animation={true}
-                        width={300}
-                        height={300} />
                     <p>
-                        Ratio : {(getTotalMissionStatus(player, EMissionStatus.SUCCESS) / getTotalMissionStatus(player, EMissionStatus.FAILED))
+                        Ratio : {(getTotalMissionStatus(EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.FAILED))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
+                    <Chart
+                        width={'300px'}
+                        height={'auto'}
+                        chartType="PieChart"
+                        loader={<div>Waiting Data</div>}
+                        data={getLooseStats()}
+                        options={{ ...PieStyle }}
+                    />
                 </div>
             </Container>
             {/*<div>
