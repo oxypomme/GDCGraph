@@ -44,7 +44,7 @@ type PropsType = {
 const Player = (props: PropsType): JSX.Element => {
     const { playerID } = props;
 
-    const [playerText, setPlayerText] = React.useState(playerID);
+    const [playerText, setPlayerText] = React.useState<string>(playerID ? playerID : "");
     const [player, setPlayer] = React.useState(playerID);
 
     const handleNameChange = (event: React.SyntheticEvent): void => {
