@@ -20,12 +20,22 @@
 
   /*CONST*/
   --nav-size: 50px;
-  --footer-size: 230px;
 }
 
 * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+html,
+body {
+  display: flex;
+}
+
+body,
+#root {
+  height: 100vh;
+  width: 100%;
 }
 
 body {
@@ -50,7 +60,7 @@ h6 {
 }
 
 a {
-  color: var(--accent1);
+  color: var(--note);
   transition: color 0.25s;
 }
 

@@ -8,11 +8,12 @@ import Home from "./views/home";
 import Players from "./views/players";
 
 import NotFound from "./views/errors/NotFound";
+import NotImplemented from './views/errors/NotImplemented';
 
 const AppContainer = styled.div`
   margin-top: var(--nav-size);
   text-align: center;
-  min-height: calc(100vh - var(--nav-size) - var(--footer-size) - 14px);
+  height: calc(100vh - var(--nav-size));
 `;
 
 const App = (): JSX.Element => {
@@ -23,7 +24,7 @@ const App = (): JSX.Element => {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path={["/players", "/players/:id"]} component={Players} />
-          <Route exact path="/missions/:id" component={Home} />
+          <Route exact path={["/missions", "/missions/:id"]} component={NotImplemented} />
           <Route component={NotFound} />
         </Switch>
       </AppContainer>

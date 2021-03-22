@@ -13,7 +13,7 @@ const PlayersView = (): JSX.Element => {
 
     return (
         <div>
-            <h1>Joueurs</h1>
+            <h1 style={{ visibility: 'hidden' }}>Joueurs</h1>
             <Player playerID={id} />
         </div>
     );

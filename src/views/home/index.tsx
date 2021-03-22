@@ -1,10 +1,11 @@
 import React from 'react';
+import NotImplemented from '../errors/NotImplemented';
 
 const Home = (): JSX.Element => {
     return (
-        <div>
-
-        </div>
+        <>
+            <NotImplemented />
+        </>
     );
 }
 
