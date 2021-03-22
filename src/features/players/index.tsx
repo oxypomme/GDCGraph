@@ -55,11 +55,17 @@ const Player = (props: PropsType): JSX.Element => {
         setPlayer((event.target as HTMLInputElement).value)
     }
 
+    const handleKeyPress = (event: React.KeyboardEvent): void => {
+        if (event.key === 'Enter') {
+            setPlayer((event.target as HTMLInputElement).value);
+        }
+    }
+
     return (
         <Flex>
             <Search>
                 <label>Nom ou # du joueur :
-                    <input type="text" value={playerText} onChange={handleNameChange} onBlur={handleNameBlur} />
+                    <input type="text" value={playerText} onChange={handleNameChange} onBlur={handleNameBlur} onKeyPress={handleKeyPress} />
                 </label>
             </Search>
             <HSeparator width={"50%"} />
