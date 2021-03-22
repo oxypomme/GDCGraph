@@ -91,7 +91,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     return (
         <div>
             {isPlayerLoading ? <Loading /> : <></>}
-            <h2>{player?.infos.name}</h2>
+            <h2>#{player?.infos.id} - {player?.infos.name}</h2>
             <p>{player?.infos.count_missions} missions au compteur</p>
             <Container>
                 <div>
