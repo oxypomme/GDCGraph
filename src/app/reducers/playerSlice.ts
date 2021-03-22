@@ -26,12 +26,23 @@ export const fetchPlayerList = createAsyncThunk(
 );
 export const fetchPlayer = createAsyncThunk(
     'player/fetchPlayer',
-    async (id: string) => {
+    async (id: string, { getState }) => {
         let pId = id;
         if (!parseInt(id)) {
             pId = (await (await fetch(urljoin(urlAPI, `/players/name/${id}`))).json()).id;
         }
-        return await (await fetch(urljoin(urlAPI, `/players/${pId}`))).json();
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const currPlayers = ((getState() as any).player as PlayerState).players;
+        const currIndex = currPlayers.findIndex(val => val.infos.id == parseInt(pId));
+        if (currIndex !== -1) {
+            return currPlayers[currIndex];
+        }
+
+        const player = await (await fetch(urljoin(urlAPI, `/players/${pId}`))).json();
+        if (player.infos.name)
+            return player;
+        return null;
     }
 );
 
@@ -48,27 +59,45 @@ export const playerSlice = createSlice({
             ...state,
             isFetching: true
         }),
-        [fetchPlayer.pending.type]: (state) => ({
-            ...state,
-            isFetching: true
-        }),
         [fetchPlayerList.fulfilled.type]: (state, { payload: playerList }: PayloadAction<IPlayersType[]>): PlayerState => ({
             ...state,
             playerList,
             isFetching: false
         }),
-        [fetchPlayer.fulfilled.type]: (state, { payload: player }: PayloadAction<PlayerDetailType>): PlayerState => {
+        [fetchPlayerList.rejected.type]: (state, { error }: any) => {
+            console.error(error);
+            return {
+                ...state,
+                isFetching: false
+            }
+        },
+        [fetchPlayer.pending.type]: (state) => ({
+            ...state,
+            isFetching: true
+        }),
+        [fetchPlayer.fulfilled.type]: (state, { payload: player }: PayloadAction<PlayerDetailType | null>): PlayerState => {
             let players = [...state.players];
-            let lastFetchIndex = players.findIndex(val => val.infos.id == player.infos.id);
+            let lastFetchIndex = -1;
 
-            if (lastFetchIndex === -1) {
-                lastFetchIndex = players.length;
-                players = [...players, player];
+            if (player) {
+                lastFetchIndex = players.findIndex(val => val.infos.id == player.infos.id);
+
+                if (lastFetchIndex === -1) {
+                    lastFetchIndex = players.length;
+                    players = [...players, player];
+                }
             }
             return {
                 ...state,
                 players,
                 lastFetchIndex,
+                isFetching: false
+            }
+        },
+        [fetchPlayer.rejected.type]: (state, { error }: any) => {
+            console.error(error);
+            return {
+                ...state,
                 isFetching: false
             }
         },
