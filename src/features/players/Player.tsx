@@ -76,7 +76,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             const win = getTotalMissionStatus(EMissionStatus.SUCCESS);
             const loose = getTotalMissionStatus(EMissionStatus.FAILED);
             if (win) {
-                data.push(['Succe', win]);
+                data.push(['Succès', win]);
             }
             if (loose) {
                 data.push(['Echec', loose]);
