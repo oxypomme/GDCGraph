@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSelector, createSlice, OutputSelector, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
 import { url as urlAPI } from '@config/gdcapi.json';

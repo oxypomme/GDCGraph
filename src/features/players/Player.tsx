@@ -2,16 +2,12 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Chart } from "react-google-charts";
-import urljoin from 'url-join';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchPlayer, selectPlayer } from '@/app/reducers/playerSlice';
 
-import { url as urlAPI } from '@config/gdcapi.json';
 import EMissionStatus from '@/models/EMissionStatus';
 import EPlayerStatus from '@/models/EPlayerStatus';
-import MissionType from '@/models/MissionType';
-import IPlayerType from '@/models/IPlayerType';
 import PieStyle from './PieStyle';
 
 const Container = styled.div`

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from '@emotion/styled';
+//import styled from '@emotion/styled';
 import { useParams } from 'react-router';
 
 import Player from '../../features/players';
