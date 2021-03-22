@@ -5,8 +5,8 @@
             "@config/*": [
                 "config/*"
             ],
-            "@models/*": [
-                "src/models/*"
+            "@/*": [
+                "src/*"
             ]
         }
     }

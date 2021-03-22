@@ -2,10 +2,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Chart } from "react-google-charts";
-import urljoin from 'url-join';
 
-import { url as urlAPI } from '@config/gdcapi.json';
-import IPlayerType from '@models/IPlayerType';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchPlayerList, selectPlayerList } from '@/app/reducers/playerSlice';
 
 const Container = styled.div`
     display: flex;
@@ -13,41 +12,38 @@ const Container = styled.div`
     align-content: center;
 `;
 
-interface IPlayersType extends IPlayerType {
-    last_mission: string
-}
-
 const AllPlayers = (): JSX.Element => {
-    const [players, setPlayers] = React.useState<IPlayersType[]>()
+    const dispatch = useAppDispatch();
+    const playerList = useAppSelector(selectPlayerList);
 
     React.useEffect((): void => {
-        (async () => {
-            setPlayers(await (await fetch(urljoin(urlAPI, '/players'))).json());
-        })();
-    }, []);
+        if (playerList.length <= 0) {
+            dispatch(fetchPlayerList());
+        }
+    }, [playerList]);
 
     const getTop3Stats = (): unknown[] => {
         const headers = ['Player', 'Count'];
-        if (players) {
-            return [headers, ...players.sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
+        if (playerList.length > 0) {
+            return [headers, ...playerList.slice().sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
         }
         return [headers];
     }
 
     const getAverage = (): number => {
-        if (players) {
+        if (playerList.length > 0) {
             let sumMiss = 0;
-            for (const player of players) {
+            for (const player of playerList) {
                 sumMiss += player.count_missions;
             }
-            return sumMiss / players.length;
+            return sumMiss / playerList.length;
         }
         return 0;
     }
 
     return (
         <div>
-            <h2>{players?.length} joueurs ont étés trouvés</h2>
+            <h2>{playerList?.length} joueurs ont étés trouvés</h2>
             <Container>
                 <Chart
                     width={'auto'}

@@ -6,4 +6,8 @@ interface IPlayerType {
     count_missions: number
 }
 
+export interface IPlayersType extends IPlayerType {
+    last_mission: string
+}
+
 export default IPlayerType;

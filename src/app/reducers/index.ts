@@ -1,5 +1,9 @@
 import { combineReducers } from "redux";
 
-const rootReducer = combineReducers({});
+import playerReducer from "./playerSlice";
 
-export default rootReducer;
+const reducer = combineReducers({
+    player: playerReducer
+});
+
+export default reducer;

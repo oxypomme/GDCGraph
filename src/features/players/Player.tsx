@@ -4,11 +4,14 @@ import styled from '@emotion/styled';
 import { Chart } from "react-google-charts";
 import urljoin from 'url-join';
 
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { fetchPlayer, selectPlayer } from '@/app/reducers/playerSlice';
+
 import { url as urlAPI } from '@config/gdcapi.json';
-import EMissionStatus from '@models/EMissionStatus';
-import EPlayerStatus from '@models/EPlayerStatus';
-import MissionType from '@models/MissionType';
-import IPlayerType from '@models/IPlayerType';
+import EMissionStatus from '@/models/EMissionStatus';
+import EPlayerStatus from '@/models/EPlayerStatus';
+import MissionType from '@/models/MissionType';
+import IPlayerType from '@/models/IPlayerType';
 import PieStyle from './PieStyle';
 
 const Container = styled.div`
@@ -21,23 +24,13 @@ type PropsType = {
     id: string
 }
 
-type PlayerDetailType = {
-    infos: IPlayerType,
-    missions: Array<MissionType>
-}
-
 const PlayerDetail = (props: PropsType): JSX.Element => {
+    const dispatch = useAppDispatch();
     const { id } = props;
-    const [player, setPlayer] = React.useState<PlayerDetailType>();
+    const player = useAppSelector(selectPlayer)
 
     React.useEffect((): void => {
-        (async () => {
-            let pId = id;
-            if (!parseInt(id)) {
-                pId = (await (await fetch(urljoin(urlAPI, `/players/name/${id}`))).json()).id;
-            }
-            setPlayer(await (await fetch(urljoin(urlAPI, `/players/${pId}`))).json());
-        })();
+        dispatch(fetchPlayer(id))
     }, [id]);
 
     const getTotalPlayerStatus = (status: EPlayerStatus): number => {
