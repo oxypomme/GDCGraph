@@ -4,11 +4,12 @@ import styled from '@emotion/styled';
 import { Chart } from "react-google-charts";
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { fetchPlayer, selectPlayer } from '@/app/reducers/playerSlice';
+import { fetchPlayer, selectPlayer, selectPlayerFetching } from '@/app/reducers/playerSlice';
 
 import EMissionStatus from '@/models/EMissionStatus';
 import EPlayerStatus from '@/models/EPlayerStatus';
 import PieStyle from './PieStyle';
+import Loading from '@/components/Loading';
 
 const Container = styled.div`
     display: flex;
@@ -24,6 +25,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     const dispatch = useAppDispatch();
     const { id } = props;
     const player = useAppSelector(selectPlayer)
+    const isPlayerLoading = useAppSelector(selectPlayerFetching);
 
     React.useEffect((): void => {
         dispatch(fetchPlayer(id))
@@ -88,6 +90,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
 
     return (
         <div>
+            {isPlayerLoading ? <Loading /> : <></>}
             <h2>{player?.infos.name}</h2>
             <p>{player?.infos.count_missions} missions au compteur</p>
             <Container>

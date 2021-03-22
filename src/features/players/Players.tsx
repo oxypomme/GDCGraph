@@ -4,7 +4,8 @@ import styled from '@emotion/styled';
 import { Chart } from "react-google-charts";
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { fetchPlayerList, selectPlayerList } from '@/app/reducers/playerSlice';
+import { fetchPlayerList, selectPlayerFetching, selectPlayerList } from '@/app/reducers/playerSlice';
+import Loading from '@/components/Loading';
 
 const Container = styled.div`
     display: flex;
@@ -15,6 +16,7 @@ const Container = styled.div`
 const AllPlayers = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const playerList = useAppSelector(selectPlayerList);
+    const isPlayerLoading = useAppSelector(selectPlayerFetching);
 
     React.useEffect((): void => {
         if (playerList.length <= 0) {
@@ -43,6 +45,7 @@ const AllPlayers = (): JSX.Element => {
 
     return (
         <div>
+            {isPlayerLoading ? <Loading /> : <></>}
             <h2>{playerList?.length} joueurs ont étés trouvés</h2>
             <Container>
                 <Chart

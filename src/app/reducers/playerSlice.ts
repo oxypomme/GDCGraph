@@ -80,6 +80,6 @@ const getState = (state: RootState): PlayerState => state.player;
 
 export const selectPlayerList = createSelector(getState, state => state.playerList);
 export const selectPlayer = createSelector(getState, state => state.players[state.lastFetchIndex]);
-export const selectFetching = createSelector(getState, state => state.isFetching);
+export const selectPlayerFetching = createSelector(getState, state => state.isFetching);
 
 export default playerSlice.reducer;
