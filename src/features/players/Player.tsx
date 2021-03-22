@@ -10,6 +10,7 @@ import EMissionStatus from '@/models/EMissionStatus';
 import EPlayerStatus from '@/models/EPlayerStatus';
 import PieStyle from './PieStyle';
 import Loading from '@/components/Loading';
+import Tag from '@/components/Tag';
 
 const Container = styled.div`
     display: flex;
@@ -93,6 +94,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             {isPlayerLoading ? <Loading /> : <></>}
             <h2>#{player?.infos.id} - {player?.infos.name}</h2>
             <p>{player?.infos.count_missions} missions au compteur</p>
+            <p>Dernière mission joué le {player?.missions[0].date} <Tag element={player?.missions[0].mission_status} /></p>
             <Container>
                 <div>
                     <h3>Mort ou vif ?</h3>
