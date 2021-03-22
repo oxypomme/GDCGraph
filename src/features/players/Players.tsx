@@ -4,8 +4,8 @@ import styled from '@emotion/styled';
 import { Chart } from "react-google-charts";
 import urljoin from 'url-join';
 
-import { url as urlAPI } from '../../config/gdcapi.json';
-import IPlayerType from '../../models/IPlayerType';
+import { url as urlAPI } from '@config/gdcapi.json';
+import IPlayerType from '@models/IPlayerType';
 
 const Container = styled.div`
     display: flex;
