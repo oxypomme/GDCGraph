@@ -100,16 +100,14 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     const getRoleStats = (): unknown[] => {
         const data: any[][] = [["Role", "Nombre"]];
         if (player) {
+            const errors: { mission: number, role: string }[] = new Array(0);
             const rolesCount: { [role: string]: number } = { Inconnu: player.missions.length };
             for (const miss of player.missions) {
                 let isMissionDone = false;
-                const roleLower = toLowerWOAccent(miss.role);
                 for (let i = 0; i < Object.values(roles).length; i++) {
-                    const roleConfigVals = Object.values(roles)[i].map(roleConfigVal => toLowerWOAccent(roleConfigVal));
                     const roleConfigKey = Object.keys(roles)[i];
-
-                    for (const roleConfigVal of roleConfigVals) {
-                        if (roleLower.includes(roleConfigVal)) {
+                    for (const roleConfigVal of Object.values(roles)[i].map(roleConfigVal => toLowerWOAccent(roleConfigVal))) {
+                        if (toLowerWOAccent(miss.role).includes(roleConfigVal)) {
                             isMissionDone = true;
                             if (isNaN(rolesCount[roleConfigKey])) {
                                 rolesCount[roleConfigKey] = 1;
@@ -126,7 +124,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                     }
                 }
                 if (!isMissionDone) {
-                    console.log(`[Player.tsx/getRoleStats/${player.infos.name}] Role skipped :`, miss.role, "Mission ID :", miss.id, "\nIf you see this warning and you're not the owner of the website, please contact OxyTom#1831 on Discord.");
+                    errors.push({ mission: miss.id, role: miss.role });
                 }
             }
             for (let i = 0; i < Object.keys(rolesCount).length; i++) {
@@ -134,15 +132,19 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                 if (Object.values(rolesCount)[i] > 0)
                     data.push([role, Object.values(rolesCount)[i]])
             }
+            if (errors.length > 0) {
+                console.log(`[Player.tsx/getRoleStats/${player.infos.name}] Roles skipped :`, errors, "\nIf you see this warning and you're not the owner of the website, please contact OxyTom#1831 on Discord.");
+            }
         }
-
         return data.sort((a, b) => b[1] - a[1]);
     }
 
     React.useEffect(() => {
-        setRoleStats(getRoleStats());
-        setDeathStats(getDeathStats());
-        setLooseStats(getLooseStats());
+        if (!isPlayerLoading) {
+            setRoleStats(getRoleStats());
+            setDeathStats(getDeathStats());
+            setLooseStats(getLooseStats());
+        }
     }, [isPlayerLoading]);
 
     return (
