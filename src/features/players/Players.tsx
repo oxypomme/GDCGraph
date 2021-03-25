@@ -56,13 +56,9 @@ const AllPlayers = (): JSX.Element => {
                     data={getTop3Stats()}
                     options={{
                         isStacked: true,
-                        chart: {
-                            title: '3 plus gros joueurs',
-                        },
+                        chart: { title: '3 plus gros joueurs' },
                         legend: 'none',
-                        vAxis: {
-                            title: "Nombre de missions",
-                        },
+                        vAxis: { title: "Nombre de missions" },
                         colors: ['#ADEBAD']
                     }}
                 />

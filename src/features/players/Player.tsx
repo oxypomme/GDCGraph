@@ -6,6 +6,8 @@ import { Chart } from "react-google-charts";
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchPlayer, selectPlayer, selectPlayerFetching } from '@/app/reducers/playerSlice';
 
+import roles from '@config/roles.json';
+
 import EMissionStatus from '@/models/EMissionStatus';
 import EPlayerStatus from '@/models/EPlayerStatus';
 import PieStyle from './PieStyle';
@@ -27,6 +29,10 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     const { id } = props;
     const player = useAppSelector(selectPlayer)
     const isPlayerLoading = useAppSelector(selectPlayerFetching);
+
+    const [roleStats, setRoleStats] = React.useState({});
+    const [deathStats, setDeathStats] = React.useState({});
+    const [looseStats, setLooseStats] = React.useState({});
 
     React.useEffect((): void => {
         dispatch(fetchPlayer(id))
@@ -89,6 +95,56 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         return data;
     }
 
+    const toLowerWOAccent = (str: string): string => str.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
+    const getRoleStats = (): unknown[] => {
+        const data: any[][] = [["Role", "Nombre"]];
+        if (player) {
+            const rolesCount: { [role: string]: number } = { Inconnu: player.missions.length };
+            for (const miss of player.missions) {
+                let isMissionDone = false;
+                const roleLower = toLowerWOAccent(miss.role);
+                for (let i = 0; i < Object.values(roles).length; i++) {
+                    const roleConfigVals = Object.values(roles)[i].map(roleConfigVal => toLowerWOAccent(roleConfigVal));
+                    const roleConfigKey = Object.keys(roles)[i];
+
+                    for (const roleConfigVal of roleConfigVals) {
+                        if (roleLower.includes(roleConfigVal)) {
+                            isMissionDone = true;
+                            if (isNaN(rolesCount[roleConfigKey])) {
+                                rolesCount[roleConfigKey] = 1;
+                            }
+                            else {
+                                rolesCount[roleConfigKey]++;
+                            }
+                            rolesCount.Inconnu--;
+                            break;
+                        }
+                    }
+                    if (isMissionDone) {
+                        break;
+                    }
+                }
+                if (!isMissionDone) {
+                    console.log(`[Player.tsx/getRoleStats/${player.infos.name}] Role skipped :`, miss.role, "Mission ID :", miss.id, "\nIf you see this warning and you're not the owner of the website, please contact OxyTom#1831 on Discord.");
+                }
+            }
+            for (let i = 0; i < Object.keys(rolesCount).length; i++) {
+                const role = Object.keys(rolesCount)[i];
+                if (Object.values(rolesCount)[i] > 0)
+                    data.push([role, Object.values(rolesCount)[i]])
+            }
+        }
+
+        return data.sort((a, b) => b[1] - a[1]);
+    }
+
+    React.useEffect(() => {
+        setRoleStats(getRoleStats());
+        setDeathStats(getDeathStats());
+        setLooseStats(getLooseStats());
+    }, [isPlayerLoading]);
+
     return (
         <div>
             {isPlayerLoading ? <Loading /> : <></>}
@@ -98,32 +154,52 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             <Container>
                 <div>
                     <h3>Mort ou vif ?</h3>
+                    <Chart
+                        width={'300px'}
+                        height={'auto'}
+                        chartType="PieChart"
+                        loader={<div>Waiting Data</div>}
+                        data={deathStats}
+                        options={{ ...PieStyle }}
+                    />
                     <p>
                         Ratio : {(getTotalPlayerStatus(EPlayerStatus.ALIVE) / getTotalPlayerStatus(EPlayerStatus.DEAD))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
+                </div>
+                <div>
+                    <h3>Victoire ?</h3>
                     <Chart
                         width={'300px'}
                         height={'auto'}
                         chartType="PieChart"
                         loader={<div>Waiting Data</div>}
-                        data={getDeathStats()}
+                        data={looseStats}
                         options={{ ...PieStyle }}
                     />
-                </div>
-                <div>
-                    <h3>Victoire ?</h3>
                     <p>
                         Ratio : {(getTotalMissionStatus(EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.FAILED))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
+                </div>
+                <div>
+                    <h3>Roles</h3>
                     <Chart
                         width={'300px'}
                         height={'auto'}
-                        chartType="PieChart"
+                        chartType="ColumnChart"
                         loader={<div>Waiting Data</div>}
-                        data={getLooseStats()}
-                        options={{ ...PieStyle }}
+                        data={roleStats}
+                        options={{
+                            isStacked: true,
+                            legend: 'none',
+                            vAxis: { title: "Nombre de missions" },
+                            hAxis: {
+                                title: "Role",
+                                textPosition: 'none'
+                            },
+                            colors: ['#ADEBAD']
+                        }}
                     />
                 </div>
             </Container>
