@@ -155,7 +155,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             <p>Dernière mission joué le {player?.missions[0].date} <Tag element={player?.missions[0].mission_status} /></p>
             <Container>
                 <div>
-                    <h3>Mort ou vif ?</h3>
+                    <h3>Mort ou vif</h3>
                     <Chart
                         width={'300px'}
                         height={'auto'}
@@ -170,7 +170,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                     </p>
                 </div>
                 <div>
-                    <h3>Victoire ?</h3>
+                    <h3>Victoire</h3>
                     <Chart
                         width={'300px'}
                         height={'auto'}
@@ -203,6 +203,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             colors: ['#ADEBAD']
                         }}
                     />
+                    {/* TOOD: Bigger Chart */}
                 </div>
             </Container>
             {/*<div>

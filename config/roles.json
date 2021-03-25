@@ -66,8 +66,10 @@
         "Explosif",
         "Explosive",
         "Expert Démo-Déminage",
-        "Explo (",
-        "Démo"
+        "Explo",
+        "Démo",
+        "EOD",
+        "Démineur"
     ],
     "Mule": [
         "Mule",

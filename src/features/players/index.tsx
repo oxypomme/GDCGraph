@@ -66,6 +66,7 @@ const Player = (props: PropsType): JSX.Element => {
             <Search>
                 <label>Nom ou # du joueur :
                     <input type="text" value={playerText} onChange={handleNameChange} onBlur={handleNameBlur} onKeyPress={handleKeyPress} />
+                    {/* TODO: AutoCompletion */}
                 </label>
             </Search>
             <HSeparator width={"50%"} />
