@@ -16,7 +16,7 @@ const NotImplemented = (): JSX.Element => {
             <h2>Page en cours de construction</h2>
             <p>
                 &quot;Vous pouvez attendre le temps que je bosse ?&quot;<br />
-                <a href="github.com/oxypomme">OxyTom</a>, 2021
+                <a href="https://github.com/oxypomme">OxyTom</a>, 2021
             </p>
         </Container>
     );
