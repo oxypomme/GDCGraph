@@ -38,6 +38,8 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         dispatch(fetchPlayer(id))
     }, [id]);
 
+    const toLowerWOAccent = (str: string): string => str.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
     const getTotalPlayerStatus = (status: EPlayerStatus): number => {
         if (player) {
             return player.missions.filter(m => m.player_status === status).length;
@@ -94,8 +96,6 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         }
         return data;
     }
-
-    const toLowerWOAccent = (str: string): string => str.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
     const getRoleStats = (): unknown[] => {
         const data: any[][] = [["Role", "Nombre"]];
