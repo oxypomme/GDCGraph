@@ -164,7 +164,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         if (player) {
             const months: { [date: string]: number } = {};
             for (const miss of player.missions) {
-                const date = dayjs(miss.date, 'DD/MM/YYYY').format('MMMM YYYY');
+                const date = dayjs(miss.date, 'DD/MM/YYYY').format('MMM YYYY');
                 if (months[date]) {
                     months[date]++;
                 } else {
@@ -197,7 +197,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             for (let i = 0; i < Object.keys(days).length; i++) {
                 const day = Object.keys(days)[i];
                 if (Object.values(days)[i] > 0) {
-                    const label = dayjs().day(parseInt(day)).format('dddd');
+                    const label = dayjs().day(parseInt(day)).format('dd');
                     data.push([label, Object.values(days)[i]])
                 }
             }
