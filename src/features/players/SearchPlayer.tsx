@@ -65,6 +65,7 @@ const SearchPlayer = (props: PropsType): JSX.Element => {
             if (selectRef.current.select) {
                 ((selectRef.current.select as any).select as any).clearValue()
                 setPlayer("");
+                window.history.replaceState(null, "", '#' + location.pathname.replace(/(\b\/.*$|$)/, ''));
             }
         }
     }
