@@ -14,10 +14,23 @@ import PieStyle from './PieStyle';
 import Loading from '@/components/Loading';
 import Tag from '@/components/Tag';
 
+const Base = styled.div`
+    width: 50%;
+`;
+
 const Container = styled.div`
     display: flex;
     align-content: center;
     justify-content: center;
+    flex-wrap: wrap;
+`;
+
+const ChartContainer = styled.div<{ wide?: string }>`
+    flex-basis: ${props => props.wide ? '75%' : '50%'};
+    width: ${props => props.wide ? props.wide : '25%'};
+    & *[dir="ltr"] {
+        margin: 0 auto;
+    }
 `;
 
 type PropsType = {
@@ -148,16 +161,16 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     }, [isPlayerLoading]);
 
     return (
-        <div>
+        <Base>
             {isPlayerLoading ? <Loading /> : <></>}
             <h2>#{player?.infos.id} - {player?.infos.name}</h2>
             <p>{player?.infos.count_missions} missions au compteur</p>
             <p>Dernière mission joué le {player?.missions[0].date} <Tag element={player?.missions[0].mission_status} /></p>
             <Container>
-                <div>
+                <ChartContainer>
                     <h3>Mort ou vif</h3>
                     <Chart
-                        width={'300px'}
+                        width={'100%'}
                         height={'auto'}
                         chartType="PieChart"
                         loader={<div>Waiting Data</div>}
@@ -168,11 +181,11 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                         Ratio : {(getTotalPlayerStatus(EPlayerStatus.ALIVE) / getTotalPlayerStatus(EPlayerStatus.DEAD))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
-                </div>
-                <div>
+                </ChartContainer>
+                <ChartContainer>
                     <h3>Victoire</h3>
                     <Chart
-                        width={'300px'}
+                        width={'100%'}
                         height={'auto'}
                         chartType="PieChart"
                         loader={<div>Waiting Data</div>}
@@ -183,12 +196,12 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                         Ratio : {(getTotalMissionStatus(EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.FAILED))
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
-                </div>
-                <div>
+                </ChartContainer>
+                <ChartContainer wide={"100%"}>
                     <h3>Roles</h3>
                     <Chart
-                        width={'300px'}
-                        height={'auto'}
+                        width={'100%'}
+                        height={'300px'}
                         chartType="ColumnChart"
                         loader={<div>Waiting Data</div>}
                         data={roleStats}
@@ -203,8 +216,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             colors: ['#ADEBAD']
                         }}
                     />
-                    {/* TOOD: Bigger Chart */}
-                </div>
+                </ChartContainer>
             </Container>
             {/*<div>
                 <p>
@@ -213,7 +225,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                         .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
                 </p>
             </div>*/}
-        </div>
+        </Base>
     );
 }
 
