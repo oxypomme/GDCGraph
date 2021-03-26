@@ -300,7 +300,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             hAxis: {
                                 title: "Mois",
                             },
-                            colors: ['#ADEBAD']
+                            colors: ['#81d5ff']
                         }}
                     />
                 </ChartContainer>
@@ -319,7 +319,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             hAxis: {
                                 title: "Journée"
                             },
-                            colors: ['#ADEBAD']
+                            colors: ['#81d5ff']
                         }}
                     />
                 </ChartContainer>
