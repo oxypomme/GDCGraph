@@ -14,6 +14,7 @@ import PieStyle from './PieStyle';
 import Loading from '@/components/Loading';
 import Tag from '@/components/Tag';
 import { VSeparator } from '@/components';
+import dayjs from 'dayjs';
 
 const Base = styled.div`
     width: 50%;
@@ -47,6 +48,8 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     const [roleStats, setRoleStats] = React.useState({});
     const [deathStats, setDeathStats] = React.useState({});
     const [looseStats, setLooseStats] = React.useState({});
+    const [monthStats, setMonthStats] = React.useState({});
+    const [dayStats, setDayStats] = React.useState({});
 
     React.useEffect((): void => {
         dispatch(fetchPlayer(id))
@@ -89,8 +92,9 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             if (alive + death !== player.infos.count_missions) {
                 data.push(['Inconnu', player.infos.count_missions - (alive + death)]);
             }
+            return data;
         }
-        return data;
+        return [...data, []];
     }
 
     const getLooseStats = (): unknown[] => {
@@ -107,8 +111,9 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             if (win + loose !== player.infos.count_missions) {
                 data.push(['Inconnu', player.infos.count_missions - (win + loose)]);
             }
+            return data;
         }
-        return data;
+        return [...data, []];
     }
 
     const getRoleStats = (): unknown[] => {
@@ -149,8 +154,53 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             if (errors.length > 0) {
                 console.log(`[Player.tsx/getRoleStats/${player.infos.name}] Roles skipped :`, errors, "\nIf you see this warning and you're not the owner of the website, please contact OxyTom#1831 on Discord.");
             }
+            return data.sort((a, b) => b[1] - a[1]);
         }
-        return data.sort((a, b) => b[1] - a[1]);
+        return [...data, []]
+    }
+
+    const getMonthStats = (): any => {
+        const data: any[][] = [];
+        if (player) {
+            const months: { [date: string]: number } = {};
+            for (const miss of player.missions) {
+                const date = dayjs(miss.date, 'DD/MM/YYYY').format('MMMM YYYY');
+                if (months[date]) {
+                    months[date]++;
+                } else {
+                    months[date] = 1;
+                }
+            }
+            for (let i = 0; i < Object.keys(months).length; i++) {
+                const month = Object.keys(months)[i];
+                if (Object.values(months)[i] > 0)
+                    data.push([month, Object.values(months)[i]])
+            }
+            return [["Mois", "Nombre"], ...data.reverse()];
+        }
+        return [["Mois", "Nombre"], []];
+    }
+
+    const getDayStats = (): any => {
+        const data: any[][] = [["Journée", "Nombre"]];
+        if (player) {
+            const days: { [date: string]: number } = {};
+            for (const miss of player.missions) {
+                const date = dayjs(miss.date, 'DD/MM/YYYY').format('dddd');
+                if (days[date]) {
+                    days[date]++;
+                } else {
+                    days[date] = 1;
+                }
+            }
+            for (let i = 0; i < Object.keys(days).length; i++) {
+                const day = Object.keys(days)[i];
+                if (Object.values(days)[i] > 0)
+                    data.push([day, Object.values(days)[i]])
+            }
+            return data;
+        }
+        return [...data, []];
     }
 
     React.useEffect(() => {
@@ -158,6 +208,8 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             setRoleStats(getRoleStats());
             setDeathStats(getDeathStats());
             setLooseStats(getLooseStats());
+            setMonthStats(getMonthStats());
+            setDayStats(getDayStats);
         }
     }, [isPlayerLoading]);
 
@@ -222,6 +274,47 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             hAxis: {
                                 title: "Role",
                                 textPosition: 'none'
+                            },
+                            colors: ['#ADEBAD']
+                        }}
+                    />
+                </ChartContainer>
+                <ChartContainer>
+                    <h3>Nombre de missions par mois</h3>
+                    <Chart
+                        width={'100%'}
+                        height={'auto'}
+                        chartType="LineChart"
+                        loader={<div>Waiting Data</div>}
+                        data={monthStats}
+                        options={{
+                            isStacked: true,
+                            legend: 'none',
+                            vAxis: {
+                                title: "Nombre de missions",
+                                minValue: 0
+                            },
+                            hAxis: {
+                                title: "Mois",
+                            },
+                            colors: ['#ADEBAD']
+                        }}
+                    />
+                </ChartContainer>
+                <ChartContainer>
+                    <h3>Nombre de missions par journée</h3>
+                    <Chart
+                        width={'100%'}
+                        height={'auto'}
+                        chartType="ColumnChart"
+                        loader={<div>Waiting Data</div>}
+                        data={dayStats}
+                        options={{
+                            isStacked: true,
+                            legend: 'none',
+                            vAxis: { title: "Nombre de missions" },
+                            hAxis: {
+                                title: "Journée"
                             },
                             colors: ['#ADEBAD']
                         }}

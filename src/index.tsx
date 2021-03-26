@@ -2,10 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 
+import dayjs from 'dayjs';
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { } from "dayjs/locale/fr";
+dayjs.extend(customParseFormat);
+
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from './app/store';
+
+dayjs.locale('fr');
 
 ReactDOM.render(
   <React.StrictMode>
