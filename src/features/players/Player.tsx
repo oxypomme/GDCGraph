@@ -200,11 +200,12 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                     </p>
                 </ChartContainer>
                 <div>
+                    <h3>On a fini sans toi</h3>
                     <p>
                         {player?.infos.name} est mort {getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)} fois alors
                     que la mission s&apos;est soldé par un succès,<br /> ce qui représente {((getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.SUCCESS)) * 100)
                             .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
-                </p>
+                    </p>
                 </div>
                 <ChartContainer wide={"100%"}>
                     <h3>Roles</h3>
