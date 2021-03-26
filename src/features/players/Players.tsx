@@ -46,7 +46,7 @@ const AllPlayers = (): JSX.Element => {
     return (
         <div>
             {isPlayerLoading ? <Loading /> : <></>}
-            <h2>{playerList?.length} joueurs ont étés trouvés</h2>
+            <h2>{playerList?.length} joueurs ont été trouvés</h2>
             <Container>
                 <Chart
                     width={'auto'}
