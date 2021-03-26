@@ -5,6 +5,7 @@ import Creatable from 'react-select/creatable';
 
 import { fetchPlayerList, selectPlayerList } from '@/app/reducers/playerSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useLocation } from 'react-router-dom';
 
 const Search = styled.div`
     display: flex;
@@ -40,6 +41,7 @@ type PropsType = {
 const SearchPlayer = (props: PropsType): JSX.Element => {
     const { setPlayer } = props;
     const dispatch = useAppDispatch();
+    const location = useLocation();
 
     const players = useAppSelector(selectPlayerList)
 
@@ -53,6 +55,7 @@ const SearchPlayer = (props: PropsType): JSX.Element => {
                 dispatch(fetchPlayerList());
             } else {
                 setPlayer(elmnt.value.toString());
+                window.history.replaceState(null, "", '#' + location.pathname.replace(/(\b\/.*$|$)/, '/' + elmnt.value.toString()));
             }
         }
     }
