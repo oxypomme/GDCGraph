@@ -31,7 +31,9 @@
         "Chef de section",
         "Bras droit",
         "Chef",
-        "Commander"
+        "Commander",
+        "Lieutenant",
+        "Colonel"
     ],
     "Assistant AT": [
         "Assistant AT",
@@ -43,7 +45,15 @@
         "M136",
         "M72",
         "RPG",
-        "SMAW"
+        "SMAW",
+        "Antitank"
+    ],
+    "Assistant AA": [
+        "Assistant AA"
+    ],
+    "Anti Air": [
+        "AA",
+        "Javelin"
     ],
     "JTAC": [
         "JTAC",
@@ -53,7 +63,7 @@
         "Medecin",
         "Medic",
         "Infirmier",
-        "Le vétérinaire",
+        "Vétérinaire",
         "Doc",
         "Corpsman",
         "Secouriste",
@@ -69,7 +79,9 @@
         "Explo",
         "Démo",
         "EOD",
-        "Démineur"
+        "Démineur",
+        "Déminage",
+        "Expert IED"
     ],
     "Mule": [
         "Mule",
@@ -103,6 +115,7 @@
     "Machine Gunner": [
         "Machine Gunner",
         "Machinegunner",
+        "Machine_Gunner",
         "MG",
         "Mitrailleur"
     ],
@@ -126,10 +139,13 @@
     ],
     "Membre d'équipage": [
         "Membre d'équipage",
+        "Equipage",
+        "Gunner",
         "Conducteur",
         "Tireur",
         "Chef de bord",
-        "Crew"
+        "Crew",
+        "Driver"
     ],
     "Breacher": [
         "Breacher"
@@ -155,6 +171,10 @@
         "Assaultman",
         "Fantassin",
         "Rfl",
-        "Fireman"
+        "Fireman",
+        "Fighter",
+        "BLUFOR",
+        "OPFOR",
+        "Indépendant"
     ]
 }
