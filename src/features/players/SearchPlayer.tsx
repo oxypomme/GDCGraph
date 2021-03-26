@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import Creatable from 'react-select/creatable'
+import Creatable from 'react-select/creatable';
 
 import { fetchPlayerList, selectPlayerList } from '@/app/reducers/playerSlice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -45,14 +45,23 @@ const SearchPlayer = (props: PropsType): JSX.Element => {
 
     const [playersItems, setPlayersItems] = React.useState<ISelectItem[]>(new Array(0));
 
+    const selectRef = React.useRef<Creatable<ISelectItem, false>>(null);
+
     const handlePlayerChange = (elmnt: ISelectItem | null): void => {
         if (elmnt) {
-            console.log(elmnt);
-
             if (elmnt.value === 0) {
                 dispatch(fetchPlayerList());
             } else {
                 setPlayer(elmnt.value.toString());
+            }
+        }
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Delete' && selectRef.current) {
+            if (selectRef.current.select) {
+                ((selectRef.current.select as any).select as any).clearValue()
+                setPlayer("");
             }
         }
     }
@@ -68,9 +77,11 @@ const SearchPlayer = (props: PropsType): JSX.Element => {
     return (
         <Search>
             <label>Joueur :
-                <Creatable
+                <Creatable<ISelectItem, false>
+                    ref={selectRef}
                     options={playersItems}
                     onChange={handlePlayerChange}
+                    onKeyDown={handleKeyDown}
                     components={{
                         DropdownIndicator: () => null,
                         IndicatorSeparator: () => null,
