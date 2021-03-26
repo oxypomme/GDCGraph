@@ -166,7 +166,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             if (errors.length > 0) {
                 console.log(`[Player.tsx/getRoleStats/${player.infos.name}] Roles skipped :`, errors, "\nIf you see this warning and you're not the owner of the website, please contact OxyTom#1831 on Discord.");
             }
-            return data.sort((a, b) => typeof a === 'number' && typeof b === 'number' ? b[1] - a[1] : 0);
+            return data.sort((a, b) => typeof a[1] === 'number' && typeof b[1] === 'number' ? b[1] - a[1] : 0);
         }
         return [...data, ["", 0]]
     }
