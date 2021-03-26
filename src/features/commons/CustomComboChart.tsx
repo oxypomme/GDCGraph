@@ -17,7 +17,7 @@ const CustomComboChart = (props: PropsType): JSX.Element => {
     return (
         <Chart
             width={'100%'}
-            height={'auto'}
+            height={'250px'}
             chartType="ComboChart"
             loader={<div>Waiting Data</div>}
             data={stats}

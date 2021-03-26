@@ -332,7 +332,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                     <h3>Nombre de missions par mois</h3>
                     <Chart
                         width={'100%'}
-                        height={'auto'}
+                        height={'250px'}
                         chartType="LineChart"
                         loader={<div>Waiting Data</div>}
                         data={monthStats}
