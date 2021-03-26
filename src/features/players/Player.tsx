@@ -13,6 +13,7 @@ import EPlayerStatus from '@/models/EPlayerStatus';
 import PieStyle from './PieStyle';
 import Loading from '@/components/Loading';
 import Tag from '@/components/Tag';
+import { VSeparator } from '@/components';
 
 const Base = styled.div`
     width: 50%;
@@ -26,7 +27,7 @@ const Container = styled.div`
 `;
 
 const ChartContainer = styled.div<{ wide?: string }>`
-    flex-basis: ${props => props.wide ? '75%' : '50%'};
+    flex-basis: ${props => props.wide ? '75%' : '49%'};
     width: ${props => props.wide ? props.wide : '25%'};
     & *[dir="ltr"] {
         margin: 0 auto;
@@ -165,7 +166,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             {isPlayerLoading ? <Loading /> : <></>}
             <h2>#{player?.infos.id} - {player?.infos.name}</h2>
             <p>{player?.infos.count_missions} missions au compteur</p>
-            <p>Dernière mission joué le {player?.missions[0].date} <Tag element={player?.missions[0].mission_status} /></p>
+            <p>Dernière mission joué le {player?.missions[0]?.date} <Tag element={player?.missions[0]?.mission_status} /></p>
             <Container>
                 <ChartContainer>
                     <h3>Mort ou vif</h3>
@@ -182,6 +183,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </ChartContainer>
+                <VSeparator />
                 <ChartContainer>
                     <h3>Victoire</h3>
                     <Chart
