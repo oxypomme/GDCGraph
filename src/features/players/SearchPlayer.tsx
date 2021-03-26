@@ -91,7 +91,7 @@ const SearchPlayer = (props: PropsType): JSX.Element => {
                         IndicatorSeparator: () => null,
                         Placeholder: () => null
                     }}
-                    getOptionLabel={(p: ISelectItem) => `${p.value != 0 ? (typeof p.value === 'string' && !parseInt(p.value) ? p.value : `#${p.value}`) : ''}${p.value && p.name ? ' - ' : ''}${(p.name ? p.name : '')}`}
+                    getOptionLabel={(p: ISelectItem) => `${p.value != 0 ? (typeof p.value === 'string' && !parseInt(p.value) ? p.value : `#${p.value}`) : ''}${p.value && p.name ? ' - ' : ''}${(p.name || '')}`}
                 />
             </label>
         </Search>

@@ -165,7 +165,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         <Base>
             {isPlayerLoading ? <Loading /> : <></>}
             <h2>#{player?.infos.id} - {player?.infos.name}</h2>
-            <p>{player?.infos.count_missions} missions au compteur</p>
+            <p>{player?.infos.count_missions || 0} missions au compteur</p>
             <p>Dernière mission joué le {player?.missions[0]?.date} <Tag element={player?.missions[0]?.mission_status} /></p>
             <Container>
                 <ChartContainer>
@@ -199,6 +199,13 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </ChartContainer>
+                <div>
+                    <p>
+                        {player?.infos.name} est mort {getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)} fois alors
+                    que la mission s&apos;est soldé par un succès,<br /> ce qui représente {((getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.SUCCESS)) * 100)
+                            .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
+                </p>
+                </div>
                 <ChartContainer wide={"100%"}>
                     <h3>Roles</h3>
                     <Chart
@@ -220,13 +227,6 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                     />
                 </ChartContainer>
             </Container>
-            {/*<div>
-                <p>
-                    {player?.infos.name} est mort {getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)} fois alors
-                    que la mission s&apos;est soldé par un succès,<br /> ce qui représente {((getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.SUCCESS)) * 100)
-                        .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
-                </p>
-            </div>*/}
         </Base>
     );
 }
