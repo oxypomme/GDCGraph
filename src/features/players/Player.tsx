@@ -171,26 +171,47 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         return [...data, ["", 0]]
     }
 
+    const playableWeeksInMonth = (month: number, year: number): number => {
+        const playablesDays = [0, 3, 5, 6];
+        let day = 1;
+        let counter = 0;
+        let date = new Date(year, month, day);
+        while (date.getMonth() === month) {
+            if (playablesDays.includes(date.getDay())) {
+                counter++;
+            }
+            day++;
+            date = new Date(year, month, day);
+        }
+        return counter;
+    }
+
     const getMonthStats = (): ChartStat[] => {
-        const data: ChartStat[] = [];
+        const header = ["Mois", "Nombre", "Maximum"];
         if (player) {
-            const months: { [date: string]: number } = {};
+            const data: ChartStat[] = [];
+            const months: { [date: string]: { count: number, max: number } } = {};
             for (const miss of player.missions) {
-                const date = dayjs(miss.date, 'DD/MM/YYYY').format('MMM YYYY');
-                if (months[date]) {
-                    months[date]++;
+                const date = dayjs(miss.date, 'DD/MM/YYYY');
+                const dateKey = date.format('MMM YYYY');
+                if (months[dateKey]) {
+                    months[dateKey].count++;
                 } else {
-                    months[date] = 1;
+                    months[dateKey] = {
+                        count: 1,
+                        max: playableWeeksInMonth(date.month(), date.year())
+                    };
                 }
             }
             for (let i = 0; i < Object.keys(months).length; i++) {
                 const month = Object.keys(months)[i];
-                if (Object.values(months)[i] > 0)
-                    data.push([month, Object.values(months)[i]])
+                if (Object.values(months)[i].count > 0) {
+                    data.push([month, Object.values(months)[i].count, Object.values(months)[i].max])
+                }
             }
-            return [["Mois", "Nombre"], ...data.reverse()];
+            return [header, ...data.reverse()];
         }
-        return [["Mois", "Nombre"], ["", 0]];
+        return [header, ["", 0, 0]];
     }
 
     const getDayStats = (): TimeStats[] => {
@@ -338,7 +359,6 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                         data={monthStats}
                         options={{
                             isStacked: true,
-                            legend: 'none',
                             vAxis: {
                                 title: "Nombre de missions",
                                 minValue: 0
@@ -346,7 +366,10 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             hAxis: {
                                 title: "Mois",
                             },
-                            colors: ['#81d5ff']
+                            series: {
+                                1: { lineDashStyle: [4, 4] }
+                            },
+                            ...PieStyle
                         }}
                     />
                 </ChartContainer>
