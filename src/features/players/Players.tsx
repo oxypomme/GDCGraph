@@ -29,7 +29,7 @@ const AllPlayers = (): JSX.Element => {
         if (playerList.length > 0) {
             return [headers, ...playerList.slice().sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
         }
-        return [headers, []];
+        return [headers, ["", 0]];
     }
 
     const getAverage = (): number => {

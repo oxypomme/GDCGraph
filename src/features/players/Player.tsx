@@ -94,7 +94,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             }
             return data;
         }
-        return [...data, []];
+        return [...data, ["", 0]];
     }
 
     const getLooseStats = (): unknown[] => {
@@ -113,7 +113,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             }
             return data;
         }
-        return [...data, []];
+        return [...data, ["", 0]];
     }
 
     const getRoleStats = (): unknown[] => {
@@ -156,7 +156,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             }
             return data.sort((a, b) => b[1] - a[1]);
         }
-        return [...data, []]
+        return [...data, ["", 0]]
     }
 
     const getMonthStats = (): any => {
@@ -178,15 +178,16 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             }
             return [["Mois", "Nombre"], ...data.reverse()];
         }
-        return [["Mois", "Nombre"], []];
+        return [["Mois", "Nombre"], ["", 0]];
     }
 
     const getDayStats = (): any => {
         const data: any[][] = [["Journée", "Nombre"]];
         if (player) {
-            const days: { [date: string]: number } = {};
+            const days: { [date: number]: number } = {};
             for (const miss of player.missions) {
-                const date = dayjs(miss.date, 'DD/MM/YYYY').format('dddd');
+                const rawdate = dayjs(miss.date, 'DD/MM/YYYY').day();
+                const date = rawdate == 0 ? 7 : rawdate; // Sunday is the last day of the week. Change my mind.
                 if (days[date]) {
                     days[date]++;
                 } else {
@@ -195,12 +196,14 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             }
             for (let i = 0; i < Object.keys(days).length; i++) {
                 const day = Object.keys(days)[i];
-                if (Object.values(days)[i] > 0)
-                    data.push([day, Object.values(days)[i]])
+                if (Object.values(days)[i] > 0) {
+                    const label = dayjs().day(parseInt(day)).format('dddd');
+                    data.push([label, Object.values(days)[i]])
+                }
             }
             return data;
         }
-        return [...data, []];
+        return [...data, ["", 0]];
     }
 
     React.useEffect(() => {
@@ -209,7 +212,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             setDeathStats(getDeathStats());
             setLooseStats(getLooseStats());
             setMonthStats(getMonthStats());
-            setDayStats(getDayStats);
+            setDayStats(getDayStats());
         }
     }, [isPlayerLoading]);
 
