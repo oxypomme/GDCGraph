@@ -1,8 +1,13 @@
 import React from 'react';
-//import styled from '@emotion/styled';
+import styled from '@emotion/styled';
 import { useParams } from 'react-router';
 
 import Player from '../../features/players';
+
+const Title = styled.h1`
+    visibility: hidden;
+    margin: 0;
+`;
 
 type ParamsType = {
     id: string
@@ -13,7 +18,7 @@ const PlayersView = (): JSX.Element => {
 
     return (
         <div>
-            <h1 style={{ visibility: 'hidden' }}>Joueurs</h1>
+            <Title>Joueurs</Title>
             <Player playerID={id} />
         </div>
     );
