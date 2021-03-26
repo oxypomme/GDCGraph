@@ -20,7 +20,6 @@ const TimeGraph = (props: PropsType): JSX.Element => {
     const handleFilterChange = (elmnt: { value: number, label: string } | null) => {
         if (elmnt?.value) {
             setCurrStat(elmnt.value)
-
         }
     }
 
