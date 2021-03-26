@@ -10,7 +10,7 @@ const Search = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 25%;
+    width: 15%;
 
     & > label {
         width: 100%;
