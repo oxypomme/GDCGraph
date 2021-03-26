@@ -63,6 +63,7 @@ const SearchPlayer = (props: PropsType): JSX.Element => {
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Delete' && selectRef.current) {
             if (selectRef.current.select) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 ((selectRef.current.select as any).select as any).clearValue()
                 setPlayer("");
                 window.history.replaceState(null, "", '#' + location.pathname.replace(/(\b\/.*$|$)/, ''));

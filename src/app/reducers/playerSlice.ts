@@ -64,6 +64,7 @@ export const playerSlice = createSlice({
             playerList,
             isFetching: false
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [fetchPlayerList.rejected.type]: (state, { error }: any) => {
             console.error(error);
             return {
@@ -94,6 +95,7 @@ export const playerSlice = createSlice({
                 isFetching: false
             }
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [fetchPlayer.rejected.type]: (state, { error }: any) => {
             console.error(error);
             return {
