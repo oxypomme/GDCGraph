@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faChartPie, faGlobeEurope, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartPie, faGlobeEurope, faMap, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const Nav = styled.nav`
     height: var(--nav-size);
@@ -53,6 +53,7 @@ const Navbar = (): JSX.Element => {
                 <NavItem><NavLink exact to="/"><FontAwesomeIcon icon={faChartPie} />GDC Graph</NavLink></NavItem>
                 <NavItem><NavLink to="/players"><FontAwesomeIcon icon={faUsers} />Joueurs</NavLink></NavItem>
                 <NavItem><NavLink exact to="/missions"><FontAwesomeIcon icon={faGlobeEurope} />Missions</NavLink></NavItem>
+                <NavItem><NavLink exact to="/maps"><FontAwesomeIcon icon={faMap} />Maps</NavLink></NavItem>
                 <NavItem right><a href="https://grecedecanards.fr/GDCStats/"><FontAwesomeIcon icon={faChartLine} />GDC Stats</a></NavItem>
             </NavList>
         </Nav>

@@ -23,11 +23,16 @@ const Home = (): JSX.Element => {
         history.push('/missions');
     }
 
+    const handleMapsClick = () => {
+        history.push('/maps');
+    }
+
     return (
         <>
             <Flex>
                 <Applet image="" title="Joueurs" desc="Affiche des stats générales sur les joueurs, ou un joueur en particulier." onClick={handlePlayersClick} />
                 <Applet image="" title="Missions" desc="Affiche des stats générales sur les missions, ou une mission en particulier." onClick={handleMissionsClick} />
+                <Applet image="" title="Maps" desc="Affiche des stats générales sur les maps" onClick={handleMapsClick} />
             </Flex>
             <p>
                 Outil développé pour les canards de <a href="https://grecedecanards.fr/">Grèce de Canard</a>.

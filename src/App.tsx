@@ -9,11 +9,11 @@ import Players from "./views/players";
 
 import NotFound from "./views/errors/NotFound";
 import NotImplemented from './views/errors/NotImplemented';
+import Maps from './views/maps';
+import Footer from './features/commons/Footer';
 
 const AppContainer = styled.div`
-  margin-top: var(--nav-size);
   text-align: center;
-  height: calc(100vh - var(--nav-size));
 `;
 
 const App = (): JSX.Element => {
@@ -25,9 +25,11 @@ const App = (): JSX.Element => {
           <Route exact path="/" component={Home} />
           <Route exact path={["/players", "/players/:id"]} component={Players} />
           <Route exact path={["/missions", "/missions/:id"]} component={NotImplemented} />
+          <Route exact path={"/maps"} component={Maps} />
           <Route component={NotFound} />
         </Switch>
       </AppContainer>
+      <Footer />
     </Router>
   );
 }

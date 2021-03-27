@@ -20,6 +20,7 @@
 
   /*CONST*/
   --nav-size: 50px;
+  --footer-size: 50px;
 }
 
 * {
@@ -35,7 +36,7 @@ body {
 
 body,
 #root {
-  height: 100vh;
+  height: calc(100vh - var(--nav-size) - var(--footer-size));
   width: 100%;
 }
 
@@ -44,6 +45,7 @@ body {
   color: var(--text);
 
   margin: 0;
+  margin-top: var(--nav-size);
   padding: 0;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
