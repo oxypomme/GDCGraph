@@ -7,8 +7,7 @@ import NotImplemented from '../errors/NotImplemented';
 const Maps = (): JSX.Element => {
     return (
         <>
-            <NotImplemented />
-            {/*<MapsCharts />*/}
+            <MapsCharts />
         </>
     );
 }
