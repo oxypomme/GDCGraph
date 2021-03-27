@@ -2,7 +2,8 @@ import React from 'react';
 
 import Select from 'react-select';
 
-import CustomComboChart, { ChartStat } from '../commons/CustomComboChart';
+import CustomComboChart from '../commons/CustomComboChart';
+import { ChartStat } from '@/models/StatType';
 
 export type TimeStats = ChartStat[];
 

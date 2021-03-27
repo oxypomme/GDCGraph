@@ -16,7 +16,7 @@ import Tag from '@/components/Tag';
 import { VSeparator } from '@/components';
 import dayjs from 'dayjs';
 import TimeGraph, { TimeStats } from './DayGraph';
-import { ChartStat } from '../commons/CustomComboChart';
+import { ChartStat } from '@/models/StatType';
 
 const Base = styled.div`
     width: 50%;

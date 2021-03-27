@@ -18,14 +18,20 @@ const AllPlayers = (): JSX.Element => {
     const playerList = useAppSelector(selectPlayerList);
     const isPlayerLoading = useAppSelector(selectPlayerFetching);
 
+    const [topPlayer, setTopPlayer] = React.useState<unknown[]>();
+    const [averagePlayer, setAveragePlayer] = React.useState<number>();
+
     React.useEffect((): void => {
         if (playerList.length <= 0) {
             dispatch(fetchPlayerList());
+        } else {
+            setTopPlayer(getTop3Stats());
+            setAveragePlayer(getAverage());
         }
     }, [playerList]);
 
     const getTop3Stats = (): unknown[] => {
-        const headers = ['Player', 'Count'];
+        const headers = ['Joueur', 'Nombre de missions'];
         if (playerList.length > 0) {
             return [headers, ...playerList.slice().sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
         }
@@ -53,7 +59,7 @@ const AllPlayers = (): JSX.Element => {
                     height={'auto'}
                     chartType="ColumnChart"
                     loader={<div>Loading Chart</div>}
-                    data={getTop3Stats()}
+                    data={topPlayer}
                     options={{
                         isStacked: true,
                         chart: { title: '3 plus gros joueurs' },
@@ -63,7 +69,7 @@ const AllPlayers = (): JSX.Element => {
                     }}
                 />
             </Container>
-            <p>Chaque joueur a joué {getAverage().toLocaleString(undefined, { maximumFractionDigits: 0 })} missions en moyenne</p>
+            <p>Chaque joueur a joué {averagePlayer?.toLocaleString(undefined, { maximumFractionDigits: 0 })} missions en moyenne</p>
         </div>
     );
 }

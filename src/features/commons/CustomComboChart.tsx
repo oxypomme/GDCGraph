@@ -2,9 +2,8 @@ import React from 'react';
 
 import { Chart } from "react-google-charts";
 
+import { ChartStat } from '@/models/StatType';
 import PieStyle from './PieStyle';
-
-export type ChartStat = (string | number)[]
 
 type PropsType = {
     stats: ChartStat,

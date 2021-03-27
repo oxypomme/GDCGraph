@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-type PropsType = {
+import MapsCharts from '@/features/maps';
+import NotImplemented from '../errors/NotImplemented';
 
-}
-
-const Maps = (props: PropsType): JSX.Element => {
+const Maps = (): JSX.Element => {
     return (
-        <div>
-
-        </div>
+        <>
+            <NotImplemented />
+            {/*<MapsCharts />*/}
+        </>
     );
 }
 
