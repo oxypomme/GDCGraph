@@ -8,7 +8,7 @@ const Foot = styled.footer`
     background-color: var(--background-dark);
     text-align: center;
     font-size: 14px;
-    height: var(--nav-size);
+    height: var(--footer-size);
     padding: 5px;
     
     position:absolute;
@@ -37,6 +37,9 @@ const Footer = (): JSX.Element => {
         <Foot>
             <p>
                 All icons used are from <IconWithLink href="https://fontawesome.com"><FontAwesomeIcon icon={faFontAwesome} color="#339af0" /> <LinkText>Font Awesome</LinkText></IconWithLink>.
+            </p>
+            <p>
+                <a href="https://github.com/oxypomme/gdcgraph/graphs/contributors">Liste des contributeurs</a>
             </p>
         </Foot>
     );

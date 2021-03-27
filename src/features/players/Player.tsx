@@ -90,6 +90,8 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         return 0;
     }
 
+    const getTPSWMPercent = (pStatus: EPlayerStatus, mStatus: EMissionStatus): number => ((getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.SUCCESS)) * 100);
+
     const getDeathStats = (): unknown[] => {
         const data: unknown[] = [["Status fin", "Nombre"]];
         if (player) {
@@ -187,7 +189,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     }
 
     const getMonthStats = (): ChartStat[] => {
-        const header = ["Mois", "Nombre", "Maximum"];
+        const header = ["Mois", "Nombre", "Maximum*"];
         if (player) {
             const data: ChartStat[] = [];
             const months: { [date: string]: { count: number, max: number } } = {};
@@ -321,14 +323,15 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </ChartContainer>
-                <div>
-                    <h3>Elle a fini sans toi</h3>
-                    <p>
-                        {player?.infos.name} est mort {getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)} fois alors
-                    que la mission s&apos;est soldé par un succès,<br /> ce qui représente {((getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.SUCCESS)) * 100)
-                            .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
-                    </p>
-                </div>
+                {getTPSWMPercent(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) > 40 ?
+                    <div>
+                        <h3>Elle a fini sans toi</h3>
+                        <p>
+                            {player?.infos.name} est mort {getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)} fois alors
+                    que la mission s&apos;est soldé par un succès,<br /> ce qui représente {getTPSWMPercent(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)
+                                .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
+                        </p>
+                    </div> : <></>}
                 <ChartContainer wide={"100%"}>
                     <h3>Roles</h3>
                     <Chart
@@ -372,6 +375,9 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             ...PieStyle
                         }}
                     />
+                    <p>
+                        *//TODO Explication Max
+                    </p>
                 </ChartContainer>
                 <ChartContainer>
                     <h3>Nombre de missions par journée</h3>

@@ -81,13 +81,17 @@
         "EOD",
         "Démineur",
         "Déminage",
-        "Expert IED"
+        "Expert IED",
+        "Engineer",
+        "Ingénieur",
+        "Saboteur"
     ],
     "Mule": [
         "Mule",
         "Porteur de munitions",
         "Porteur Mun",
-        "Préposé munitions"
+        "Préposé munitions",
+        "Préposé aux munitions"
     ],
     "Grenadier": [
         "Grenadier"
@@ -161,6 +165,7 @@
         "Fusilier",
         "Fusillier",
         "Fusiller",
+        "Fusiler",
         "Rifleman",
         "Riffleman",
         "Opérateur",
