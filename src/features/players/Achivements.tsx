@@ -36,7 +36,7 @@ const Achivements = (props: PropsType): JSX.Element => {
     React.useEffect(() => {
         const achs: AchivementType[] = [];
         if (player) {
-            if (player.total_player_mission_status.SUCCES_Mort / player.total_mission_status.SUCCES > .4) {
+            if (player.total_player_mission_status.SUCCES_Mort / player.total_mission_status.SUCCES >= .4) {
                 achs.push({
                     name: "Elle a fini sans toi",
                     icon: "",
@@ -44,7 +44,7 @@ const Achivements = (props: PropsType): JSX.Element => {
                 });
             }
 
-            if (player.count_missions > 400) {
+            if (player.count_missions >= 400) {
                 achs.push({
                     name: "Petit joueur",
                     icon: "",
@@ -56,7 +56,7 @@ const Achivements = (props: PropsType): JSX.Element => {
                 day: dayjs().day(parseInt(key)).format('dddd'),
                 count: Object.values(player.days)[i].count
             })).sort((a, b) => b.count - a.count);
-            if (sortedDays[0]?.count / player?.count_missions > .4) {
+            if (sortedDays[0]?.count / player?.count_missions >= .4) {
                 achs.push({
                     name: `Joueur du ${sortedDays[0].day}`,
                     icon: "",
@@ -68,7 +68,7 @@ const Achivements = (props: PropsType): JSX.Element => {
                 name: key,
                 count: Object.values(player?.roles.roles_count)[i]
             })).sort((a, b) => b.count - a.count);
-            if (sortedRoles[0]?.count / player?.count_missions > .4) {
+            if (sortedRoles[0]?.count / player?.count_missions >= .4) {
                 achs.push({
                     name: `Éternel ${sortedRoles[0].name}`,
                     icon: "",
