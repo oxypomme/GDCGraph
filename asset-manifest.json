@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/GDCGraph/static/css/main.f4dd020c.chunk.css",
-    "main.js": "/GDCGraph/static/js/main.acd6d387.chunk.js",
-    "main.js.map": "/GDCGraph/static/js/main.acd6d387.chunk.js.map",
+    "main.js": "/GDCGraph/static/js/main.bedf7104.chunk.js",
+    "main.js.map": "/GDCGraph/static/js/main.bedf7104.chunk.js.map",
     "runtime-main.js": "/GDCGraph/static/js/runtime-main.7bad0917.js",
     "runtime-main.js.map": "/GDCGraph/static/js/runtime-main.7bad0917.js.map",
     "static/js/2.eee3d951.chunk.js": "/GDCGraph/static/js/2.eee3d951.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.7bad0917.js",
     "static/js/2.eee3d951.chunk.js",
     "static/css/main.f4dd020c.chunk.css",
-    "static/js/main.acd6d387.chunk.js"
+    "static/js/main.bedf7104.chunk.js"
   ]
 }
