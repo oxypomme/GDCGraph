@@ -3,7 +3,8 @@ const PieStyle = {
         '#81d5ff',
         '#ee9e9e',
         '#fceb96',
-        "#ADEBAD"
+        "#ADEBAD",
+        "#C6A5CC"
     ],
     legend: {
         position: 'bottom'

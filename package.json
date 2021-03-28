@@ -41,6 +41,7 @@
     "react-router-hash-link": "^2.4.0",
     "react-scripts": "^4.0.3",
     "react-select": "^4.3.0",
+    "react-tooltip": "^4.2.17",
     "url-join": "^4.0.1",
     "web-vitals": "^1.1.1"
   },

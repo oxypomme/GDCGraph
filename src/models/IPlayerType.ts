@@ -12,20 +12,28 @@ interface IPlayerType extends IBasePlayerType {
     last_mission: MissionType | null,
     total_player_status: {
         Vivant: number,
-        Mort: number
+        Mort: number,
+        Inconnu: number
     },
     total_mission_status: {
         SUCCES: number,
         ECHEC: number,
-        PVP: number
+        PVP: number,
+        INCONNU: number
     },
     total_player_mission_status: {
         SUCCES_Vivant: number,
         SUCCES_Mort: number,
+        SUCCES_Inconnu: number,
+        INCONNU_Vivant: number,
+        INCONNU_Mort: number,
+        INCONNU_Inconnu: number,
         ECHEC_Vivant: number,
         ECHEC_Mort: number,
+        ECHEC_Inconnu: number,
         PVP_Vivant: number,
-        PVP_Mort: number
+        PVP_Mort: number,
+        PVP_Inconnu: number,
     },
     roles: {
         roles_count: {
@@ -44,7 +52,8 @@ interface IPlayerType extends IBasePlayerType {
             Inconnu: number,
             SUCCES: number,
             ECHEC: number,
-            PVP: number
+            PVP: number,
+            INCONNU: number
         }
     },
     updated: string

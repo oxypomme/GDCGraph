@@ -13,6 +13,7 @@ import { HSeparator, VSeparator } from '@/components';
 import dayjs from 'dayjs';
 import TimeGraph, { TimeStats } from './DayGraph';
 import { ChartStat } from '@/models/StatType';
+import Achivements from './Achivements';
 
 const Base = styled.div`
     width: 50%;
@@ -21,6 +22,19 @@ const Base = styled.div`
 const UpdateLabel = styled.p`
     color: var(--background-light);
     margin: 5px 0 0 0;
+`;
+
+const PlayerContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
+
+const InfoContainer = styled.div`
+    text-align: left;
+`;
+
+const AchivementsContainer = styled.div`
+    text-align: right;
 `;
 
 const Container = styled.div`
@@ -147,18 +161,19 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     }
 
     const getDayStats = (): TimeStats[] => {
-        const dataDead: TimeStats = [["Journée", "Vivant", "Mort", "", "Inconnu", "Total"]];
-        const dataFail: TimeStats = [["Journée", "Succès", "Echec", "PVP", "Inconnu", "Total"]];
+        const dataDead: TimeStats = [["Journée", "Vivant", "Mort", "Inconnu", "Total", ""]];
+        const dataFail: TimeStats = [["Journée", "Succès", "Echec", "Inconnu", "Total", "PVP"]];
         if (player) {
             for (let i = 0; i < Object.keys(player.days).length; i++) {
                 const day = Object.keys(player.days)[i];
                 const dayVal = Object.values(player.days)[i];
                 if (dayVal.count > 0) {
                     const label = dayjs().day(parseInt(day)).format('dd');
-                    dataDead.push([label, dayVal.Vivant, dayVal.Mort, 0, dayVal.Inconnu, dayVal.count]);
-                    dataFail.push([label, dayVal.SUCCES, dayVal.ECHEC, dayVal.PVP, dayVal.count - dayVal.SUCCES - dayVal.ECHEC - dayVal.PVP, dayVal.count]);
+                    dataDead.push([label, dayVal.Vivant, dayVal.Mort, dayVal.Inconnu, dayVal.count, 0]);
+                    dataFail.push([label, dayVal.SUCCES, dayVal.ECHEC, dayVal.INCONNU, dayVal.count, dayVal.PVP]);
                 }
             }
+            console.log([dataDead, dataFail]);
             return [dataDead, dataFail];
         }
         return [[...dataDead, ["", 0, 0, 0, 0, 0]], [...dataFail, ["", 0, 0, 0, 0, 0]]];
@@ -178,9 +193,16 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         <Base>
             {isPlayerLoading ? <Loading /> : <></>}
             <UpdateLabel>Mis à jour le : {dayjs(player?.updated).format('DD/MM/YYYY - HH:mm')}</UpdateLabel>
-            <h2>#{player?.id} - {player?.name}</h2>
-            <p>{player?.count_missions || 0} missions au compteur</p>
-            <p>Dernière mission joué le {player?.last_mission?.date} <Tag element={player?.last_mission?.mission_status} /></p>
+            <PlayerContainer>
+                <InfoContainer>
+                    <h2>#{player?.id} - {player?.name}</h2>
+                    <p>{player?.count_missions || 0} missions au compteur</p>
+                    <p>Dernière mission joué le {player?.last_mission?.date} <Tag element={player?.last_mission?.mission_status} /></p>
+                </InfoContainer>
+                <AchivementsContainer>
+                    <Achivements player={player} />
+                </AchivementsContainer>
+            </PlayerContainer>
             <HSeparator />
             <Container>
                 <ChartContainer>
@@ -214,15 +236,6 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </ChartContainer>
-                {player?.total_player_mission_status.SUCCES_Mort / player?.total_mission_status.SUCCES > .40 ?
-                    <div>
-                        <h3>Elle a fini sans toi</h3>
-                        <p>
-                            {player?.name} est mort {player?.total_player_mission_status.SUCCES_Mort} fois alors
-                    que la mission s&apos;est soldé par un succès,<br /> ce qui représente {((player?.total_player_mission_status.SUCCES_Mort / player?.total_mission_status.SUCCES) * 100)
-                                .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
-                        </p>
-                    </div> : <></>}
                 <ChartContainer wide={"100%"}>
                     <h3>Roles</h3>
                     <Chart

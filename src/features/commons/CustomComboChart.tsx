@@ -27,7 +27,7 @@ const CustomComboChart = (props: PropsType): JSX.Element => {
                     title: "Journée"
                 },
                 seriesType: 'bars',
-                series: { 4: { type: 'line' } },
+                series: { 3: { type: 'line' } },
                 ...PieStyle
             }}
             chartWrapperParams={{ view: { columns } }}

@@ -27,13 +27,13 @@ const TimeGraph = (props: PropsType): JSX.Element => {
     return (
         <>
             {
-                currStat === 1 ? <CustomComboChart stats={stats[0]} columns={[0, 5]} /> : <></>
+                currStat === 1 ? <CustomComboChart stats={stats[0]} columns={[0, 4]} /> : <></>
             }
             {
                 currStat === 2 ? <CustomComboChart stats={stats[0]} columns={[0, 1, 2, 3, 4]} /> : <></>
             }
             {
-                currStat === 3 ? <CustomComboChart stats={stats[1]} columns={[0, 1, 2, 3, 4]} /> : <></>
+                currStat === 3 ? <CustomComboChart stats={stats[1]} columns={[0, 1, 2, 3, 4, 5]} /> : <></>
             }
             <Select
                 defaultValue={chartFilters[0]}
