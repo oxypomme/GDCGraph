@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import TimeGraph, { TimeStats } from './DayGraph';
 import { ChartStat } from '@/models/StatType';
 import Achivements from './Achivements';
+import playablesDays from '@config/playablesDays.json';
 
 const Base = styled.div`
     width: 50%;
@@ -129,7 +130,6 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     }
 
     const playableWeeksInMonth = (month: number, year: number): number => {
-        const playablesDays = [0, 3, 5, 6];
         let day = 1;
         let counter = 0;
         let date = new Date(year, month, day);
@@ -173,7 +173,6 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                     dataFail.push([label, dayVal.SUCCES, dayVal.ECHEC, dayVal.INCONNU, dayVal.count, dayVal.PVP]);
                 }
             }
-            console.log([dataDead, dataFail]);
             return [dataDead, dataFail];
         }
         return [[...dataDead, ["", 0, 0, 0, 0, 0]], [...dataFail, ["", 0, 0, 0, 0, 0]]];

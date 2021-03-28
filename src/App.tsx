@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, HashRouter as Router, Switch } from 'react-router-dom';
 import styled from '@emotion/styled';
-import ReactTooltip from 'react-tooltip';
 
 import Navbar from "./features/commons/Navbar";
 
@@ -31,7 +30,6 @@ const App = (): JSX.Element => {
         </Switch>
       </AppContainer>
       <Footer />
-      <ReactTooltip type='light' />
     </Router>
   );
 }
