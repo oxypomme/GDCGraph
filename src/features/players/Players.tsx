@@ -6,11 +6,17 @@ import { Chart } from "react-google-charts";
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchPlayerList, selectPlayerFetching, selectPlayerList } from '@/app/reducers/playerSlice';
 import Loading from '@/components/Loading';
+import dayjs from 'dayjs';
 
 const Container = styled.div`
     display: flex;
     justify-content: center;
     align-content: center;
+`;
+
+const UpdateLabel = styled.p`
+    color: var(--background-light);
+    margin: 5px 0 0 0;
 `;
 
 const AllPlayers = (): JSX.Element => {
@@ -52,6 +58,7 @@ const AllPlayers = (): JSX.Element => {
     return (
         <div>
             {isPlayerLoading ? <Loading /> : <></>}
+            <UpdateLabel>Mis à jour le : {dayjs(playerList?.updated).format('DD/MM/YYYY - HH:mm:ss')}</UpdateLabel>
             <h2>{playerList?.players.length} joueurs ont été trouvés</h2>
             <Container>
                 <Chart

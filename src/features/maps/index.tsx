@@ -6,12 +6,18 @@ import { fetchMapList, selectMapFetching, selectMapList } from '@/app/reducers/m
 import Loading from '@/components/Loading';
 import { ChartStat } from '@/models/StatType';
 import { Chart } from 'react-google-charts';
+import dayjs from 'dayjs';
 
 const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+`;
+
+const UpdateLabel = styled.p`
+    color: var(--background-light);
+    margin: 5px 0 0 0;
 `;
 
 const MapsCharts = (): JSX.Element => {
@@ -22,7 +28,7 @@ const MapsCharts = (): JSX.Element => {
     const [topMaps, setTopMaps] = React.useState<ChartStat[]>()
 
     React.useEffect((): void => {
-        if (mapsList.length <= 0) {
+        if (mapsList?.maps.length <= 0) {
             dispatch(fetchMapList());
         } else {
             setTopMaps(getWorst5Stats());
@@ -32,8 +38,8 @@ const MapsCharts = (): JSX.Element => {
 
     const getWorst5Stats = (): ChartStat[] => {
         const header = ['Map', 'Nombre de missions']
-        if (mapsList.length > 0) {
-            return [header, ...mapsList.slice().sort((a, b) => a.mission_count - b.mission_count).slice(0, 5).map(p => ([p.name, p.mission_count]))];
+        if (mapsList?.maps.length > 0) {
+            return [header, ...mapsList?.maps.slice().sort((a, b) => a.mission_count - b.mission_count).slice(0, 5).map(p => ([p.name, p.mission_count]))];
         }
         return [header, ['', 0]]
     }
@@ -41,6 +47,7 @@ const MapsCharts = (): JSX.Element => {
     return (
         <div>
             {isMapsFetching ? <Loading /> : <></>}
+            <UpdateLabel>Mis à jour le : {dayjs(mapsList?.updated).format('DD/MM/YYYY - HH:mm')}</UpdateLabel>
             <Container>
                 <h2>Maps les moins jouées</h2>
                 <Chart

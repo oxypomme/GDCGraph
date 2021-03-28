@@ -11,15 +11,16 @@ export const fetchMapList = createAsyncThunk(
     async () => await (await fetch(urljoin(urlAPI, '/maps'))).json()
 );
 
+type MapListType = { maps: IMapType[], updated: string };
 interface MapsState {
-    mapList: IMapType[],
+    mapList: MapListType,
     isFetching: boolean
 }
 
 export const mapSlice = createSlice({
     name: 'map',
     initialState: {
-        mapList: [],
+        mapList: { maps: [], updated: '' },
         isFetching: false
     } as MapsState,
     extraReducers: {
@@ -27,7 +28,7 @@ export const mapSlice = createSlice({
             ...state,
             isFetching: true
         }),
-        [fetchMapList.fulfilled.type]: (state, { payload: mapList }: PayloadAction<IMapType[]>): MapsState => ({
+        [fetchMapList.fulfilled.type]: (state, { payload: mapList }: PayloadAction<MapListType>): MapsState => ({
             ...state,
             mapList,
             isFetching: false

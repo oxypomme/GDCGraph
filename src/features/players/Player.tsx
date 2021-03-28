@@ -18,6 +18,11 @@ const Base = styled.div`
     width: 50%;
 `;
 
+const UpdateLabel = styled.p`
+    color: var(--background-light);
+    margin: 5px 0 0 0;
+`;
+
 const Container = styled.div`
     display: flex;
     align-content: center;
@@ -171,6 +176,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     return (
         <Base>
             {isPlayerLoading ? <Loading /> : <></>}
+            <UpdateLabel>Mis à jour le : {dayjs(player?.updated).format('DD/MM/YYYY - HH:mm')}</UpdateLabel>
             <h2>#{player?.id} - {player?.name}</h2>
             <p>{player?.count_missions || 0} missions au compteur</p>
             <p>Dernière mission joué le {player?.last_mission?.date} <Tag element={player?.last_mission?.mission_status} /></p>
