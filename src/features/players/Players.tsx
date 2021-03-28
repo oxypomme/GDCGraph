@@ -22,7 +22,7 @@ const AllPlayers = (): JSX.Element => {
     const [averagePlayer, setAveragePlayer] = React.useState<number>();
 
     React.useEffect((): void => {
-        if (playerList.length <= 0) {
+        if (playerList.players.length <= 0) {
             dispatch(fetchPlayerList());
         } else {
             setTopPlayer(getTop3Stats());
@@ -32,19 +32,19 @@ const AllPlayers = (): JSX.Element => {
 
     const getTop3Stats = (): unknown[] => {
         const headers = ['Joueur', 'Nombre de missions'];
-        if (playerList.length > 0) {
-            return [headers, ...playerList.slice().sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
+        if (playerList.players.length > 0) {
+            return [headers, ...playerList.players.slice().sort((a, b) => b.count_missions - a.count_missions).slice(0, 3).map(p => ([p.name, p.count_missions]))];
         }
         return [headers, ["", 0]];
     }
 
     const getAverage = (): number => {
-        if (playerList.length > 0) {
+        if (playerList.players.length > 0) {
             let sumMiss = 0;
-            for (const player of playerList) {
+            for (const player of playerList.players) {
                 sumMiss += player.count_missions;
             }
-            return sumMiss / playerList.length;
+            return sumMiss / playerList.players.length;
         }
         return 0;
     }
@@ -52,7 +52,7 @@ const AllPlayers = (): JSX.Element => {
     return (
         <div>
             {isPlayerLoading ? <Loading /> : <></>}
-            <h2>{playerList?.length} joueurs ont été trouvés</h2>
+            <h2>{playerList?.players.length} joueurs ont été trouvés</h2>
             <Container>
                 <Chart
                     width={'auto'}

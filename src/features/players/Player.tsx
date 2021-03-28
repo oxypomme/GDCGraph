@@ -6,10 +6,6 @@ import { Chart } from "react-google-charts";
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchPlayer, selectPlayer, selectPlayerFetching } from '@/app/reducers/playerSlice';
 
-import roles from '@config/roles.json';
-
-import EMissionStatus from '@/models/EMissionStatus';
-import EPlayerStatus from '@/models/EPlayerStatus';
 import PieStyle from '../commons/PieStyle';
 import Loading from '@/components/Loading';
 import Tag from '@/components/Tag';
@@ -37,16 +33,6 @@ const ChartContainer = styled.div<{ wide?: string }>`
     }
 `;
 
-interface ITimeStat {
-    count: number,
-    alive: number,
-    dead: number,
-    puknown: number,
-    success: number,
-    failed: number,
-    muknown: number,
-}
-
 type PropsType = {
     id: string
 }
@@ -67,63 +53,42 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         dispatch(fetchPlayer(id))
     }, [id]);
 
-    const toLowerWOAccent = (str: string): string => str.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-
-    const getTotalPlayerStatus = (status: EPlayerStatus): number => {
+    const getDeathStats = (): ChartStat[] => {
+        const data: ChartStat[] = [["Status fin", "Nombre"]];
         if (player) {
-            return player.missions.filter(m => m.player_status === status).length;
-        }
-        return 0;
-    }
-
-    const getTotalMissionStatus = (status: EMissionStatus): number => {
-        if (player) {
-            return player.missions.filter(m => m.mission_status === status).length;
-        }
-        return 0;
-    }
-
-    const getTotalPlayerStatusWithMission = (pStatus: EPlayerStatus, mStatus: EMissionStatus): number => {
-        if (player) {
-            return player.missions.filter(m => m.player_status === pStatus && m.mission_status === mStatus).length;
-        }
-        return 0;
-    }
-
-    const getTPSWMPercent = (pStatus: EPlayerStatus, mStatus: EMissionStatus): number => ((getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.SUCCESS)) * 100);
-
-    const getDeathStats = (): unknown[] => {
-        const data: unknown[] = [["Status fin", "Nombre"]];
-        if (player) {
-            const alive = getTotalPlayerStatus(EPlayerStatus.ALIVE);
-            const death = getTotalPlayerStatus(EPlayerStatus.DEAD);
+            const alive = player.total_player_status.Vivant;
+            const death = player.total_player_status.Mort;
             if (alive) {
                 data.push(['Vivant', alive]);
             }
             if (death) {
                 data.push(['Mort', death]);
             }
-            if (alive + death !== player.infos.count_missions) {
-                data.push(['Inconnu', player.infos.count_missions - (alive + death)]);
+            if (alive + death !== player.count_missions) {
+                data.push(['Inconnu', player.count_missions - (alive + death)]);
             }
             return data;
         }
         return [...data, ["", 0]];
     }
 
-    const getLooseStats = (): unknown[] => {
-        const data: unknown[] = [["Verdict", "Nombre"]];
+    const getLooseStats = (): ChartStat[] => {
+        const data: ChartStat[] = [["Verdict", "Nombre"]];
         if (player) {
-            const win = getTotalMissionStatus(EMissionStatus.SUCCESS);
-            const loose = getTotalMissionStatus(EMissionStatus.FAILED);
+            const win = player.total_mission_status.SUCCES;
+            const loose = player.total_mission_status.ECHEC;
+            const pvp = player.total_mission_status.PVP;
             if (win) {
                 data.push(['Succès', win]);
             }
             if (loose) {
                 data.push(['Echec', loose]);
             }
-            if (win + loose !== player.infos.count_missions) {
-                data.push(['Inconnu', player.infos.count_missions - (win + loose)]);
+            if (pvp) {
+                data.push(['PVP', pvp]);
+            }
+            if (win + loose + pvp !== player.count_missions) {
+                data.push(['Inconnu', player.count_missions - (win + loose + pvp)]);
             }
             return data;
         }
@@ -133,40 +98,10 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     const getRoleStats = (): unknown[] => {
         const data: ChartStat[] = [["Role", "Nombre"]];
         if (player) {
-            const errors: { mission: number, role: string }[] = new Array(0);
-            const rolesCount: { [role: string]: number } = { Inconnu: player.missions.length };
-            for (const miss of player.missions) {
-                let isMissionDone = false;
-                for (let i = 0; i < Object.values(roles).length; i++) {
-                    const roleConfigKey = Object.keys(roles)[i];
-                    for (const roleConfigVal of Object.values(roles)[i].map(roleConfigVal => toLowerWOAccent(roleConfigVal))) {
-                        if (toLowerWOAccent(miss.role).includes(roleConfigVal)) {
-                            isMissionDone = true;
-                            if (isNaN(rolesCount[roleConfigKey])) {
-                                rolesCount[roleConfigKey] = 1;
-                            }
-                            else {
-                                rolesCount[roleConfigKey]++;
-                            }
-                            rolesCount.Inconnu--;
-                            break;
-                        }
-                    }
-                    if (isMissionDone) {
-                        break;
-                    }
-                }
-                if (!isMissionDone) {
-                    errors.push({ mission: miss.id, role: miss.role });
-                }
-            }
-            for (let i = 0; i < Object.keys(rolesCount).length; i++) {
-                const role = Object.keys(rolesCount)[i];
-                if (Object.values(rolesCount)[i] > 0)
-                    data.push([role, Object.values(rolesCount)[i]])
-            }
-            if (errors.length > 0) {
-                console.log(`[Player.tsx/getRoleStats/${player.infos.name}] Roles skipped :`, errors, "\nIf you see this warning and you're not the owner of the website, please contact OxyTom#1831 on Discord.");
+            for (let i = 0; i < Object.keys(player.roles.roles_count).length; i++) {
+                const role = Object.keys(player.roles.roles_count)[i];
+                if (Object.values(player.roles.roles_count)[i] > 0)
+                    data.push([role, Object.values(player.roles.roles_count)[i]])
             }
             return data.sort((a, b) => typeof a[1] === 'number' && typeof b[1] === 'number' ? b[1] - a[1] : 0);
         }
@@ -185,6 +120,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             day++;
             date = new Date(year, month, day);
         }
+
         return counter;
     }
 
@@ -192,23 +128,11 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
         const header = ["Mois", "Nombre", "Maximum*"];
         if (player) {
             const data: ChartStat[] = [];
-            const months: { [date: string]: { count: number, max: number } } = {};
-            for (const miss of player.missions) {
-                const date = dayjs(miss.date, 'DD/MM/YYYY');
-                const dateKey = date.format('MMM YYYY');
-                if (months[dateKey]) {
-                    months[dateKey].count++;
-                } else {
-                    months[dateKey] = {
-                        count: 1,
-                        max: playableWeeksInMonth(date.month(), date.year())
-                    };
-                }
-            }
-            for (let i = 0; i < Object.keys(months).length; i++) {
-                const month = Object.keys(months)[i];
-                if (Object.values(months)[i].count > 0) {
-                    data.push([month, Object.values(months)[i].count, Object.values(months)[i].max])
+            for (let i = 0; i < Object.keys(player.months).length; i++) {
+                const month = Object.keys(player.months)[i];
+                const date = dayjs(month, 'MMM YYYY');
+                if (Object.values(player.months)[i] > 0) {
+                    data.push([month, Object.values(player.months)[i], playableWeeksInMonth(date.month(), date.year())])
                 }
             }
             return [header, ...data.reverse()];
@@ -217,62 +141,21 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     }
 
     const getDayStats = (): TimeStats[] => {
-        const dataDead: TimeStats = [["Journée", "Vivant", "Mort", "Inconnu", "Total"]];
-        const dataFail: TimeStats = [["Journée", "Succès", "Echec", "Inconnu", "Total"]];
+        const dataDead: TimeStats = [["Journée", "Vivant", "Mort", "", "Inconnu", "Total"]];
+        const dataFail: TimeStats = [["Journée", "Succès", "Echec", "PVP", "Inconnu", "Total"]];
         if (player) {
-            const days: { [date: number]: ITimeStat } = {};
-            for (const miss of player.missions) {
-                const rawdate = dayjs(miss.date, 'DD/MM/YYYY').day();
-                const date = rawdate == 0 ? 7 : rawdate; // Sunday is the last day of the week. Change my mind.
-                if (days[date]) {
-                    days[date].count++;
-                    switch (miss.player_status) {
-                        case EPlayerStatus.ALIVE:
-                            days[date].alive++;
-                            break;
-                        case EPlayerStatus.DEAD:
-                            days[date].dead++;
-                            break;
-                        default:
-                            days[date].puknown++;
-                            break;
-                    }
-                    switch (miss.mission_status) {
-                        case EMissionStatus.SUCCESS:
-                            days[date].success++;
-                            break;
-                        case EMissionStatus.FAILED:
-                            days[date].failed++;
-                            break;
-                        default:
-                            days[date].muknown++;
-                            break;
-                    }
-                } else {
-                    days[date] = {
-                        count: 1,
-                        alive: miss.player_status === EPlayerStatus.ALIVE ? 1 : 0,
-                        dead: miss.player_status === EPlayerStatus.DEAD ? 1 : 0,
-                        puknown: miss.player_status === EPlayerStatus.UNKNOWN ? 1 : 0,
-                        success: miss.mission_status === EMissionStatus.SUCCESS ? 1 : 0,
-                        failed: miss.mission_status === EMissionStatus.FAILED ? 1 : 0,
-                        muknown: miss.mission_status === EMissionStatus.UNKNOWN ? 1 : 0
-                    };
-                }
-            }
-
-            for (let i = 0; i < Object.keys(days).length; i++) {
-                const day = Object.keys(days)[i];
-                const dayVal = Object.values(days)[i];
+            for (let i = 0; i < Object.keys(player.days).length; i++) {
+                const day = Object.keys(player.days)[i];
+                const dayVal = Object.values(player.days)[i];
                 if (dayVal.count > 0) {
                     const label = dayjs().day(parseInt(day)).format('dd');
-                    dataDead.push([label, dayVal.alive, dayVal.dead, dayVal.puknown, dayVal.count]);
-                    dataFail.push([label, dayVal.success, dayVal.failed, dayVal.muknown, dayVal.count]);
+                    dataDead.push([label, dayVal.Vivant, dayVal.Mort, 0, dayVal.Inconnu, dayVal.count]);
+                    dataFail.push([label, dayVal.SUCCES, dayVal.ECHEC, dayVal.PVP, dayVal.count - dayVal.SUCCES - dayVal.ECHEC - dayVal.PVP, dayVal.count]);
                 }
             }
             return [dataDead, dataFail];
         }
-        return [[...dataDead, ["", 0, 0, 0, 0]], [...dataFail, ["", 0, 0, 0, 0]]];
+        return [[...dataDead, ["", 0, 0, 0, 0, 0]], [...dataFail, ["", 0, 0, 0, 0, 0]]];
     }
 
     React.useEffect(() => {
@@ -288,9 +171,9 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
     return (
         <Base>
             {isPlayerLoading ? <Loading /> : <></>}
-            <h2>#{player?.infos.id} - {player?.infos.name}</h2>
-            <p>{player?.infos.count_missions || 0} missions au compteur</p>
-            <p>Dernière mission joué le {player?.missions[0]?.date} <Tag element={player?.missions[0]?.mission_status} /></p>
+            <h2>#{player?.id} - {player?.name}</h2>
+            <p>{player?.count_missions || 0} missions au compteur</p>
+            <p>Dernière mission joué le {player?.last_mission?.date} <Tag element={player?.last_mission?.mission_status} /></p>
             <Container>
                 <ChartContainer>
                     <h3>Mort ou vif</h3>
@@ -303,7 +186,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                         options={{ ...PieStyle }}
                     />
                     <p>
-                        Ratio : {(getTotalPlayerStatus(EPlayerStatus.ALIVE) / getTotalPlayerStatus(EPlayerStatus.DEAD))
+                        Ratio : {(player?.total_player_status.Vivant / player?.total_player_status.Mort)
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </ChartContainer>
@@ -319,16 +202,16 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
                         options={{ ...PieStyle }}
                     />
                     <p>
-                        Ratio : {(getTotalMissionStatus(EMissionStatus.SUCCESS) / getTotalMissionStatus(EMissionStatus.FAILED))
+                        Ratio : {(player?.total_mission_status.SUCCES / player?.total_mission_status.ECHEC)
                             .toLocaleString(undefined, { maximumFractionDigits: 2 })}
                     </p>
                 </ChartContainer>
-                {getTPSWMPercent(EPlayerStatus.DEAD, EMissionStatus.SUCCESS) > 40 ?
+                {player?.total_player_mission_status.SUCCES_Mort / player?.total_mission_status.SUCCES > .40 ?
                     <div>
                         <h3>Elle a fini sans toi</h3>
                         <p>
-                            {player?.infos.name} est mort {getTotalPlayerStatusWithMission(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)} fois alors
-                    que la mission s&apos;est soldé par un succès,<br /> ce qui représente {getTPSWMPercent(EPlayerStatus.DEAD, EMissionStatus.SUCCESS)
+                            {player?.name} est mort {player?.total_player_mission_status.SUCCES_Mort} fois alors
+                    que la mission s&apos;est soldé par un succès,<br /> ce qui représente {((player?.total_player_mission_status.SUCCES_Mort / player?.total_mission_status.SUCCES) * 100)
                                 .toLocaleString(undefined, { maximumFractionDigits: 0 })}% des ses missions accomplies !
                         </p>
                     </div> : <></>}

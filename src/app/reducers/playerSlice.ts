@@ -5,19 +5,13 @@ import { url as urlAPI } from '@config/gdcapi.json';
 import urljoin from 'url-join';
 
 import IPlayerType, { IPlayersType } from '@/models/IPlayerType'
-import MissionType from '@/models/MissionType';
 
-// Define a type for the slice state
+type PlayerListType = { players: IPlayersType[], updated: string }
 interface PlayerState {
-    playerList: IPlayersType[],
-    players: PlayerDetailType[],
+    playerList: PlayerListType,
+    players: IPlayerType[],
     lastFetchIndex: number,
     isFetching: boolean
-}
-
-export interface PlayerDetailType {
-    infos: IPlayerType,
-    missions: Array<MissionType>
 }
 
 export const fetchPlayerList = createAsyncThunk(
@@ -34,13 +28,13 @@ export const fetchPlayer = createAsyncThunk(
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const currPlayers = ((getState() as any).player as PlayerState).players;
-        const currIndex = currPlayers.findIndex(val => val.infos.id == parseInt(pId));
+        const currIndex = currPlayers.findIndex(val => val.id == parseInt(pId));
         if (currIndex !== -1) {
             return currPlayers[currIndex];
         }
 
         const player = await (await fetch(urljoin(urlAPI, `/players/${pId}`))).json();
-        if (player.infos.name)
+        if (player.name)
             return player;
         return null;
     }
@@ -49,7 +43,7 @@ export const fetchPlayer = createAsyncThunk(
 export const playerSlice = createSlice({
     name: 'player',
     initialState: {
-        playerList: [],
+        playerList: { players: [], updated: '' },
         players: [],
         lastFetchIndex: -1,
         isFetching: false
@@ -59,7 +53,7 @@ export const playerSlice = createSlice({
             ...state,
             isFetching: true
         }),
-        [fetchPlayerList.fulfilled.type]: (state, { payload: playerList }: PayloadAction<IPlayersType[]>): PlayerState => ({
+        [fetchPlayerList.fulfilled.type]: (state, { payload: playerList }: PayloadAction<PlayerListType>): PlayerState => ({
             ...state,
             playerList,
             isFetching: false
@@ -76,12 +70,12 @@ export const playerSlice = createSlice({
             ...state,
             isFetching: true
         }),
-        [fetchPlayer.fulfilled.type]: (state, { payload: player }: PayloadAction<PlayerDetailType | null>): PlayerState => {
+        [fetchPlayer.fulfilled.type]: (state, { payload: player }: PayloadAction<IPlayerType | null>): PlayerState => {
             let players = [...state.players];
             let lastFetchIndex = -1;
 
             if (player) {
-                lastFetchIndex = players.findIndex(val => val.infos.id == player.infos.id);
+                lastFetchIndex = players.findIndex(val => val.id == player.id);
 
                 if (lastFetchIndex === -1) {
                     lastFetchIndex = players.length;

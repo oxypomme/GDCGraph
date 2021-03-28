@@ -72,8 +72,8 @@ const SearchPlayer = (props: PropsType): JSX.Element => {
     }
 
     React.useEffect(() => {
-        if (players.length > 0) {
-            setPlayersItems(players.map(p => ({ name: p.name, value: p.id })));
+        if (players.players.length > 0) {
+            setPlayersItems(players.players.map(p => ({ name: p.name, value: p.id })));
         } else {
             setPlayersItems([{ name: "Récuperer les joueurs", value: 0 }]);
         }

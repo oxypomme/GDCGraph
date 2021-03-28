@@ -12,11 +12,16 @@ const Container = styled.span<{ color: string }>`
 `;
 
 type PropsType = {
-    element: EMissionStatus | EPlayerStatus
+    element: EMissionStatus | EPlayerStatus | undefined
 }
 
 const Tag = (props: PropsType): JSX.Element => {
     const { element } = props;
+
+    if (!element) {
+        return <></>;
+    }
+
     const [color, setColor] = React.useState('');
     const [content, setContent] = React.useState('');
 
