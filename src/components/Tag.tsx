@@ -18,7 +18,7 @@ type PropsType = {
 const Tag = (props: PropsType): JSX.Element => {
     const { element } = props;
 
-    if (!element) {
+    if (element === undefined) {
         return <></>;
     }
 

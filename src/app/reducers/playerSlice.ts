@@ -21,19 +21,14 @@ export const fetchPlayerList = createAsyncThunk(
 export const fetchPlayer = createAsyncThunk(
     'player/fetchPlayer',
     async (id: string, { getState }) => {
-        let pId = id;
-        if (!parseInt(id)) {
-            pId = (await (await fetch(urljoin(urlAPI, `/players/name/${id}`))).json()).id;
-        }
-
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const currPlayers = ((getState() as any).player as PlayerState).players;
-        const currIndex = currPlayers.findIndex(val => val.id == parseInt(pId));
+        const currIndex = currPlayers.findIndex(val => val.id === parseInt(id) || val.name === id);
         if (currIndex !== -1) {
             return currPlayers[currIndex];
         }
 
-        const player = await (await fetch(urljoin(urlAPI, `/players/${pId}`))).json();
+        const player = await (await fetch(urljoin(urlAPI, `/players/${id}`))).json();
         if (player.name)
             return player;
         return null;

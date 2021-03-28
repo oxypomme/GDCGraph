@@ -9,7 +9,7 @@ import { fetchPlayer, selectPlayer, selectPlayerFetching } from '@/app/reducers/
 import PieStyle from '../commons/PieStyle';
 import Loading from '@/components/Loading';
 import Tag from '@/components/Tag';
-import { VSeparator } from '@/components';
+import { HSeparator, VSeparator } from '@/components';
 import dayjs from 'dayjs';
 import TimeGraph, { TimeStats } from './DayGraph';
 import { ChartStat } from '@/models/StatType';
@@ -28,6 +28,7 @@ const Container = styled.div`
     align-content: center;
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: 20px;
 `;
 
 const ChartContainer = styled.div<{ wide?: string }>`
@@ -180,6 +181,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
             <h2>#{player?.id} - {player?.name}</h2>
             <p>{player?.count_missions || 0} missions au compteur</p>
             <p>Dernière mission joué le {player?.last_mission?.date} <Tag element={player?.last_mission?.mission_status} /></p>
+            <HSeparator />
             <Container>
                 <ChartContainer>
                     <h3>Mort ou vif</h3>
