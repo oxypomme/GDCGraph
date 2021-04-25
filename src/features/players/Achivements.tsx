@@ -87,7 +87,7 @@ const Achivements = (props: PropsType): JSX.Element => {
           count: Object.values(player.days)[i].count,
         }))
         .sort((a, b) => b.count - a.count);
-      if (sortedDays[0]?.count / player?.count_missions >= UNLOCK_PERCENT) {
+      if (sortedDays[0]?.count / player.count_missions >= UNLOCK_PERCENT) {
         achs.push({
           name: `Joueur du ${sortedDays[0].day}`,
           icon: faCalendarDay,
@@ -106,7 +106,7 @@ const Achivements = (props: PropsType): JSX.Element => {
           count: Object.values(player?.roles.roles_count)[i],
         }))
         .sort((a, b) => b.count - a.count);
-      if (sortedRoles[0]?.count / player?.count_missions >= UNLOCK_PERCENT) {
+      if (sortedRoles[0]?.count / player.count_missions >= UNLOCK_PERCENT) {
         achs.push({
           name: `Éternel ${sortedRoles[0].name}`,
           desc: `A joué ${(
@@ -124,7 +124,7 @@ const Achivements = (props: PropsType): JSX.Element => {
           leaderCount += role.count;
         }
       }
-      if (leaderCount / player?.count_missions >= UNLOCK_PERCENT) {
+      if (leaderCount / player.count_missions >= UNLOCK_PERCENT) {
         achs.push({
           name: "Leader un jour, Leader toujours",
           desc: `A joué ${(
@@ -135,7 +135,21 @@ const Achivements = (props: PropsType): JSX.Element => {
           })}% de ses missions en tant que Leader (SL, TL ou Leader)`,
         });
       }
+
+      if (player.last_mission) {
+        const months = dayjs().diff(
+          dayjs(player.last_mission?.date, "DD/MM/YYYY"),
+          "month"
+        );
+        if (months > 2)
+          achs.push({
+            name: "Je sais où tu te cache !",
+            icon: faSkull,
+            desc: `A joué sa dernière mission il y a ${months} mois`,
+          });
+      }
     }
+
     setAchivements(achs);
   }, [player]);
 
