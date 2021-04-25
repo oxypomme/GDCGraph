@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDay,
   faGamepad,
+  faMedal,
   faSkull,
   faTrophy,
   IconDefinition,
@@ -127,6 +128,7 @@ const Achivements = (props: PropsType): JSX.Element => {
       if (leaderCount / player.count_missions >= UNLOCK_PERCENT) {
         achs.push({
           name: "Leader un jour, Leader toujours",
+          icon: faMedal,
           desc: `A joué ${(
             (leaderCount / player.count_missions) *
             100
