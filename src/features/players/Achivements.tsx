@@ -7,14 +7,30 @@ import ReactTooltip from "react-tooltip";
 import playablesDays from "@config/playablesDays.json";
 import dayjs from "dayjs";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarDay,
+  faGamepad,
+  faSkull,
+  faTrophy,
+  IconDefinition,
+} from "@fortawesome/free-solid-svg-icons";
+
 const Card = styled.div`
   background: var(--background-dark);
   width: 100%;
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
+  position: relative;
   & > h4 {
     margin: 0;
+    margin-left: 5px;
+    display: inline;
+  }
+  & > svg {
+    position: absolute;
+    left: 10px;
   }
 `;
 
@@ -24,7 +40,7 @@ type PropsType = {
 
 interface AchivementType {
   name: string;
-  icon: string;
+  icon?: IconDefinition;
   desc: string;
 }
 
@@ -46,7 +62,7 @@ const Achivements = (props: PropsType): JSX.Element => {
       ) {
         achs.push({
           name: "Elle a fini sans toi",
-          icon: "",
+          icon: faSkull,
           desc: `Est mort dans ${(
             (player.total_player_mission_status.SUCCES_Mort /
               player.total_mission_status.SUCCES) *
@@ -60,7 +76,7 @@ const Achivements = (props: PropsType): JSX.Element => {
       if (player.count_missions >= NB_MISSION_MIN) {
         achs.push({
           name: "Petit joueur",
-          icon: "",
+          icon: faGamepad,
           desc: `A joué seulement ${player.count_missions} missions`,
         });
       }
@@ -74,7 +90,7 @@ const Achivements = (props: PropsType): JSX.Element => {
       if (sortedDays[0]?.count / player?.count_missions >= UNLOCK_PERCENT) {
         achs.push({
           name: `Joueur du ${sortedDays[0].day}`,
-          icon: "",
+          icon: faCalendarDay,
           desc: `A joué ${(
             (sortedDays[0].count / player.count_missions) *
             100
@@ -93,7 +109,6 @@ const Achivements = (props: PropsType): JSX.Element => {
       if (sortedRoles[0]?.count / player?.count_missions >= UNLOCK_PERCENT) {
         achs.push({
           name: `Éternel ${sortedRoles[0].name}`,
-          icon: "",
           desc: `A joué ${(
             (sortedRoles[0].count / player.count_missions) *
             100
@@ -112,7 +127,6 @@ const Achivements = (props: PropsType): JSX.Element => {
       if (leaderCount / player?.count_missions >= UNLOCK_PERCENT) {
         achs.push({
           name: "Leader un jour, Leader toujours",
-          icon: "",
           desc: `A joué ${(
             (leaderCount / player.count_missions) *
             100
@@ -130,6 +144,7 @@ const Achivements = (props: PropsType): JSX.Element => {
       {achivements.map((a, id) => (
         <>
           <Card key={id} data-tip={a.desc}>
+            <FontAwesomeIcon icon={a.icon || faTrophy} />
             <h4>{a.name}</h4>
           </Card>
           <ReactTooltip />
