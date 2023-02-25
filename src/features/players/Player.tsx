@@ -229,7 +229,8 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
 					</h2>
 					<p>{player?.count_missions || 0} missions au compteur</p>
 					<p>
-						Dernière mission joué le {player?.last_mission?.date}{" "}
+						Dernière mission joué le{" "}
+						{dayjs(player?.last_mission?.date).format("DD/MM/YYYY")}{" "}
 						<Tag element={player?.last_mission?.mission_status} />
 					</p>
 				</InfoContainer>

@@ -1,4 +1,4 @@
 {
-    "url": "https://oxypomme.fr/gdc/",
-    "devurl": "http://localhost:8080/gdc/"
+	"url": "https://gdc.oxypomme.fr/",
+	"devurl": "http://localhost:8080/"
 }

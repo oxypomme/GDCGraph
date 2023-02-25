@@ -9,6 +9,7 @@ interface IBasePlayerType {
 }
 
 interface IPlayerType extends IBasePlayerType {
+	count_cache_missions: number;
 	last_mission: MissionType | null;
 	total_player_status: {
 		Vivant: number;
