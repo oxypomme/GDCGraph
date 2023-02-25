@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import {
 	faBookDead,
 	faCalendarDay,
+	faDollarSign,
 	faGamepad,
 	faMedal,
 	faPlaneDeparture,
@@ -38,7 +39,7 @@ type PropsType = {
 	player: IPlayerType;
 };
 
-interface AchivementType {
+interface AchievementType {
 	name: string;
 	icon?: IconDefinition;
 	desc: string;
@@ -50,10 +51,10 @@ const NB_MISSION_MIN = 400;
 const Achivements = (props: PropsType): JSX.Element => {
 	const { player } = props;
 
-	const [achivements, setAchivements] = React.useState<AchivementType[]>([]);
+	const [achievements, setAchievements] = React.useState<AchievementType[]>([]);
 
 	React.useEffect(() => {
-		const achs: AchivementType[] = [];
+		const achs: AchievementType[] = [];
 		if (player) {
 			if (
 				player.total_player_mission_status.SUCCES_Mort /
@@ -165,21 +166,37 @@ const Achivements = (props: PropsType): JSX.Element => {
 					desc: `Est vivant ces ${player.streak.vivant.count} dernières missions`,
 				});
 			}
+
+			if (
+				player.count_cache_missions / player.count_missions >=
+				UNLOCK_PERCENT
+			) {
+				achs.push({
+					name: "Cherche l'argent",
+					icon: faDollarSign,
+					desc: `${(
+						(player.count_cache_missions / player.count_missions) *
+						100
+					).toLocaleString(undefined, {
+						maximumFractionDigits: 2,
+					})}% de ses missions ont été des Cache Cash`,
+				});
+			}
 		}
 
-		setAchivements(achs);
+		setAchievements(achs);
 	}, [player]);
 
 	return (
 		<>
-			{achivements.map((a, id) => (
-				<>
-					<Card key={id} data-tip={a.desc}>
+			{achievements.map((a, id) => (
+				<div key={id}>
+					<Card data-tip={a.desc}>
 						<FontAwesomeIcon icon={a.icon || faTrophy} />
 						<h4>{a.name}</h4>
 					</Card>
 					<ReactTooltip />
-				</>
+				</div>
 			))}
 		</>
 	);
