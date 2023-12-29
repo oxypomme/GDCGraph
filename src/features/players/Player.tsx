@@ -136,7 +136,12 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
 		let day = 1;
 		let counter = 0;
 		let date = new Date(year, month, day);
+		// console.log(year, month, day);
+		// console.log(date.getMonth(), month);
 		while (date.getMonth() === month) {
+			// console.log(date.getMonth(), month);
+			// console.log(playablesDays, date.getDay());
+
 			if (playablesDays.includes(date.getDay())) {
 				counter++;
 			}
@@ -153,7 +158,8 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
 			const data: ChartStat[] = [];
 			for (let i = 0; i < Object.keys(player.months).length; i++) {
 				const month = Object.keys(player.months)[i];
-				const date = dayjs(month, "MMM YYYY");
+				const date = dayjs(month).add(1, 'day');
+
 				if (Object.values(player.months)[i] > 0) {
 					data.push([
 						month,

@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 
 import dayjs from 'dayjs';
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import { } from "dayjs/locale/fr";
-dayjs.extend(customParseFormat);
+import "dayjs/locale/fr";
 
 import "./index.css";
 import App from "./App";
