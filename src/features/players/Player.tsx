@@ -162,7 +162,7 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
 					]);
 				}
 			}
-			return [header, ...data.reverse()];
+			return [header, ...data];
 		}
 		return [header, ["", 0, 0]];
 	};
@@ -334,7 +334,10 @@ const PlayerDetail = (props: PropsType): JSX.Element => {
 							...PieStyle,
 						}}
 					/>
-					<p>*//TODO Explication Max</p>
+					<p style={{ fontSize: "0.7em" }}>
+						*Le nombre &quot;maximum&quot; représente le nombre de soirs
+						usuellement jouée dans le mois
+					</p>
 				</ChartContainer>
 				<ChartContainer>
 					<h3>Nombre de missions par journée</h3>
